@@ -1,8 +1,9 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import PastorsForm from './pastorsForm'
+import PastorsForm from './grandDaughterForm'
 import DaughterForm from './daughterForm'
+import GrandDaughterForm from './grandDaughterForm'
 
 export default function Directory() {
   const [formData, setFormData] = useState({
@@ -45,8 +46,12 @@ export default function Directory() {
     setDaughterFormsList((prev) => [...(prev || []), {}])
   }
 
-  const [daughterFormsList, setDaughterFormsList] = useState<Record<string, any>[]>([])
+  const addGrandDaughterForm = () => {
+    setGrandDaughterFormsList((prev) => [...(prev || []), {}])
+  }
 
+  const [daughterFormsList, setDaughterFormsList] = useState<Record<string, any>[]>([])
+  const [grandDaughterFormsList, setGrandDaughterFormsList] = useState<Record<string, any>[]>([])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -218,6 +223,7 @@ export default function Directory() {
                   <div className='align-right justify-start'>
                     <button
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
+                      onClick={addGrandDaughterForm}
                       >
                       Add GrandDaughter Church</button>
                   </div>
@@ -225,7 +231,6 @@ export default function Directory() {
               </div>
              
               {daughterFormsList.map((_, i) => (
-              
                 <DaughterForm
                   key={i}
                   headerTitle={`Daughter Church ${i + 1}`}
@@ -234,8 +239,17 @@ export default function Directory() {
                   setDaughterFormsList={setDaughterFormsList}
                 />
               ))}
-             
 
+              {grandDaughterFormsList.map((_, i) => (
+                <GrandDaughterForm
+                  key={i}
+                  headerTitle={`GrandDaughter Church`}
+                  index={i}
+                  grandDaughterFormsList={grandDaughterFormsList}
+                  setGrandDaughterFormsList={setGrandDaughterFormsList}
+                />
+              ))}
+             
               <div className='mx-0 my-2.5 w-full'>
                 <button
                   type='submit'
