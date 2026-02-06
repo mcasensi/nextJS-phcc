@@ -95,45 +95,6 @@ const Header: React.FC = () => {
           </ul>
         </nav>
         <div className='flex items-center gap-4'>
-          <div>
-            <div className='relative hidden xl:block'>
-              <input
-                type='text'
-                placeholder='Search'
-                className='border rounded-lg pl-4 pr-8 py-2 border-primary/50 focus:border-primary outline-0 placeholder:text-primary/30'
-              />
-              <button>
-                <Icon
-                  icon={'solar:magnifer-linear'}
-                  width={17}
-                  height={17}
-                  className='text-primary text-bold absolute top-3 right-3'
-                />
-              </button>
-            </div>
-          </div>
-          <button
-            aria-label='Toggle theme'
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className='flex items-center justify-center text-body-color duration-300 hover:cursor-pointer hover:text-primary dark:text-white bg-neutral-50 rounded-full dark:bg-darklight p-2 outline-none'>
-            <Icon
-              icon='solar:sun-2-bold'
-              width='24'
-              height='24'
-              className='hidden dark:block'
-            />
-            <Icon
-              icon='solar:moon-bold'
-              width='24'
-              height='24'
-              className='dark:hidden block'
-            />
-          </button>
-          <Link
-            href='/#contact'
-            className='hidden xl:block px-4 py-2 bg-primary text-white rounded-lg outline-none hover:bg-transparent hover:text-primary border border-primary duration-500 text-base font-semibold'>
-            Contact Us
-          </Link>
           <button
             onClick={() => setNavbarOpen(!navbarOpen)}
             className='block xl:hidden p-2 rounded-lg hover:cursor-pointer'
@@ -178,29 +139,6 @@ const Header: React.FC = () => {
           {navlink.map((item, index) => (
             <MobileHeaderLink key={index} item={item} />
           ))}
-          <div className='mt-4 flex flex-col gap-4 w-full'>
-            <div className='relative w-full'>
-              <input
-                type='text'
-                placeholder='Search'
-                className='border rounded-lg pl-4 pr-8 py-2 border-primary/50 focus:border-primary outline-0 placeholder:text-primary/20 w-full'
-              />
-              <Icon
-                icon={'solar:magnifer-linear'}
-                width={17}
-                height={17}
-                className='text-primary text-bold absolute top-3 right-3'
-              />
-            </div>
-            <Link
-              href='/#contact'
-              className='px-4 py-2 bg-primary text-white rounded-lg outline-none hover:bg-transparent hover:text-primary border border-primary duration-500 text-base font-semibold'
-              onClick={() => {
-                setNavbarOpen(false)
-              }}>
-              Contact Us
-            </Link>
-          </div>
         </nav>
       </div>
     </header>

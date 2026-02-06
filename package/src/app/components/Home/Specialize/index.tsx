@@ -26,7 +26,7 @@ const Specialize = () => {
   }, [])
 
   return (
-    <section id='expertise' className='scroll-mt-12'>
+    <section id='expertise' className='scroll-mt-12 pt-35'>
       <div className='container'>
         <div className='text-center mb-8'>
           <h2 className='mb-6'>OUR VISIONS</h2>

@@ -33,10 +33,13 @@ export default function ScrollToTop() {
     <div className='fixed bottom-8 right-8 z-999'>
       <div className='flex items-center gap-2.5'>
         <Link
-          href={'/'}
+          href="https://www.youtube.com/@ThePottersHouseMandaluyong"
           target='_blank'
-          className='bg-primary text-white hover:bg-primary/15 hover:text-primary text-sm font-medium px-4 py-3.5 leading-none rounded-lg text-nowrap'>
-          Download Now
+          className='bg-red-800 text-white hover:bg-red/15 hover:text-primary text-sm font-medium px-4 py-2.5 leading-none rounded-lg text-nowrap'>
+         <div className="flex flex-wrap items-center justify-between">
+          <span className="flex p-2 bg-red-800 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
+            WATCH LIVE
+            </div>
         </Link>
         {isVisible && (
           <div
