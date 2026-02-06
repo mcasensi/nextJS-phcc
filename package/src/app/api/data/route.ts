@@ -27,25 +27,35 @@ const HeroData: HeroType[] = [
 
 const NavLinkData: NavLinkType[] = [
   {
-    label: 'Events',
-    href: '/#project',
-  },
-  {
-    label: 'Team',
-    href: '/#expertise',
-  },
-  {
-    label: 'Services',
-    href: '/#pricing',
+    label: 'Home',
+    href: '/',
   },
   {
     label: 'About Us',
-    href: '/#categories',
+    href: '/about-us',
   },
   {
-    label: 'Categories',
-    href: '/#categories',
+    label: 'Events',
+    href: '/events',
   },
+  {
+    label: 'Ministries',
+    href: '',
+    submenu: [
+      {
+        label: 'Praise & Worship',
+        href: '/chords',
+      },
+      {
+        label: 'Sunday School',
+        href: '/sunday-school',
+      },
+      {
+        label: 'one80JAM',
+        href: '/one80jam',
+      }
+    ],
+  }
 ]
 
 const ProjectData: ProjectType[] = [
@@ -88,6 +98,11 @@ const RecordData: RecordType[] = [
   {
     imgSrc: '/images/records/user.svg',
     name: 'Ptr. Joemari & Sis. Judy Annie Asensi',
+    desc: 'Assistant Pastor',
+  },
+  {
+    imgSrc: '/images/records/user.svg',
+    name: 'Ptr. Ernie & Sis. Ning Guda',
     desc: 'Assistant Pastor',
   },
   {
@@ -207,33 +222,40 @@ const CategoryData: CategoryType[] = [
 
 const FooterLinkData: FooterLinkType[] = [
   {
-    section: 'Company',
+    section: 'PIONEERING COUNTRIES',
     links: [
       {
-        label: 'Projects',
-        href: '/#project',
+        label: 'Vietname',
+        href: '/',
       },
       {
-        label: 'Expertise',
-        href: '/#expertise',
+        label: 'Laos',
+        href: '/',
       },
       {
-        label: 'Pricing',
-        href: '/#pricing',
+        label: 'Thailand',
+        href: '/',
       },
       {
-        label: 'Categories',
-        href: '/#categories',
+        label: 'Japan',
+        href: '/',
       },
     ],
   },
   {
-    section: 'Support',
+    section: 'HELPFUL LINKS',
     links: [
-      { label: 'Help center', href: '/' },
-      { label: 'Terms of service', href: '/' },
-      { label: 'Legal', href: '/' },
-      { label: 'Privacy Policy', href: '/' },
+      { label: 'Chords', href: '/chords' },
+      { label: 'Sunday School', href: '/sunday-school' },
+      { label: 'one80JAM', href: '/one80jam' },
+    ],
+  },
+  {
+    section: 'WEBSITES',
+    links: [
+      { label: "Prescott Potter's House", href: 'https://pottershousephils.com/#:~:text=Prescott%20Potter%27s%20House' },
+      { label: 'CFM Map', href: 'https://cfmmap.org/' },
+      { label: 'CFM WorldWide', href: 'http://www.worldcfm.com/' },
     ],
   },
 ]

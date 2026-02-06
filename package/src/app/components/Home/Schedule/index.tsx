@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { SetStateAction, useEffect, useState } from 'react'
 import PricingSkeleton from '../../Skeleton/Pricing'
 
-const Pricing = () => {
+const Schedule = () => {
   const [plan, setPlan] = useState<PlanType[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -51,7 +51,7 @@ const Pricing = () => {
         {/* Yearly/Monthly Toggle Buttons */}
         <div className='mb-8'>
           <div className='flex justify-center'>
-            <div className='bg-secondary dark:bg-darklight flex p-2 rounded-lg'>
+            <div className='bg-qsecondary dark:bg-darklight flex p-2 rounded-lg'>
               <button
                 className={`text-xl font-medium cursor-pointer py-2 px-8 sm:py-4 sm:px-16 ${
                   selectedCategory === 'sunday'
@@ -74,26 +74,7 @@ const Pricing = () => {
           </div>
         </div>
         {/* grid layout */}
-        <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6'>
-          {/* card-1 */}
-          <div className='bg-primary rounded-lg lg:col-span-1 md:col-span-2'>
-            <div className='flex lg:flex-col sm:flex-row flex-col justify-between w-full h-full'>
-              <div className='pl-8 pr-2.5 pt-14'>
-                <h3 className='lg:max-w-xs leading-10'>
-                  Attend Church services {' '}
-                  <span className='font-bold'> God is alive </span>
-                </h3>
-              </div>
-              <div>
-                <Image
-                  src={'/images/pricing/actor.webp'}
-                  alt='actor'
-                  width={360}
-                  height={380}                
-                />
-              </div>
-            </div>
-          </div>
+        <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-6'>
           {/* plans card */}
           {loading
             ? Array.from({ length: 2 }).map((_, i) => <PricingSkeleton key={i} />)
@@ -131,4 +112,4 @@ const Pricing = () => {
   )
 }
 
-export default Pricing
+export default Schedule

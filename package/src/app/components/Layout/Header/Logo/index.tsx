@@ -5,18 +5,18 @@ const Logo = () => {
   return (
     <Link href='/'>
       <Image
-        src='/images/logo/logo.svg'
+        src='/images/logo/cropped-PHLogo300dpi.webp'
         alt='logo'
         width={151}
         height={56}
-        className='w-full block dark:hidden'        
+        className='lg:w-80 sm:w-48 block dark:hidden'        
       />
       <Image
-        src='/images/logo/white-logo.svg'
+        src='/images/logo/cropped-PHLogo300dpi.webp'
         alt='logo'
         width={151}
         height={56}
-        className='w-full hidden dark:block'        
+        className='lg:w-80 sm:w-48 hidden dark:block'        
       />
     </Link>
   )

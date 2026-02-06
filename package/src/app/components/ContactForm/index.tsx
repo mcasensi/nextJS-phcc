@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react'
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    phnumber: '',
+    full_name: '',
+    mobile: '',
+    address: '',
     Message: '',
   })
   const [showThanks, setShowThanks] = useState(false)
@@ -28,10 +27,9 @@ const ContactForm = () => {
     }))
   }
   const reset = () => {
-    formData.firstname = ''
-    formData.lastname = ''
-    formData.email = ''
-    formData.phnumber = ''
+    formData.full_name = ''
+    formData.mobile = ''
+    formData.address = ''
     formData.Message = ''
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,10 +40,9 @@ const ContactForm = () => {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
-        Name: formData.firstname,
-        LastName: formData.lastname,
-        Email: formData.email,
-        PhoneNo: formData.phnumber,
+        Name: formData.full_name,
+        PhoneNo: formData.mobile,
+        Address: formData.address,
         Message: formData.Message,
       }),
     })
@@ -71,7 +68,7 @@ const ContactForm = () => {
     <section id='contact' className='scroll-mt-12'>
       <div className='container'>
         <div className='relative'>
-          <h2 className='mb-9 text-center'>Get in Touch</h2>
+          <h2 className='mb-9 text-center'>Open Bible Study</h2>
           <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20'>
             <form
               onSubmit={handleSubmit}
@@ -79,33 +76,30 @@ const ContactForm = () => {
               <div className='sm:flex gap-6 w-full'>
                 <div className='mx-0 my-2.5 flex-1'>
                   <label
-                    htmlFor='fname'
+                    htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    First Name
+                    Full Name
                   </label>
                   <input
-                    id='fname'
                     type='text'
-                    name='firstname'
-                    value={formData.firstname}
+                    name='full_name'
+                    value={formData.full_name}
                     onChange={handleChange}
-                    placeholder='John'
                     className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
                   />
                 </div>
-                <div className='mx-0 my-2.5 flex-1'>
+                  <div className='mx-0 my-2.5 flex-1'>
                   <label
                     htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    Last Name
+                    Mobile Number
                   </label>
                   <input
-                    id='lname'
                     type='text'
-                    name='lastname'
-                    value={formData.lastname}
+                    name='mobile'
+                    value={formData.mobile}
                     onChange={handleChange}
-                    placeholder='Doe'
+                    placeholder='09xxxxxxxxx'
                     className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
                   />
                 </div>
@@ -113,32 +107,14 @@ const ContactForm = () => {
               <div className='sm:flex gap-6 w-full'>
                 <div className='mx-0 my-2.5 flex-1'>
                   <label
-                    htmlFor='email'
-                    className='pb-3 inline-block text-base'>
-                    Email Address
-                  </label>
-                  <input
-                    id='email'
-                    type='email'
-                    name='email'
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder='john.doe@example.com'
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
-                  />
-                </div>
-                <div className='mx-0 my-2.5 flex-1'>
-                  <label
                     htmlFor='Phnumber'
                     className='pb-3 inline-block text-base'>
-                    Phone Number
+                    Address
                   </label>
                   <input
-                    id='Phnumber'
-                    type='tel'
-                    name='phnumber'
-                    placeholder='+1234567890'
-                    value={formData.phnumber}
+                    type='text'
+                    name='address'
+                    value={formData.address}
                     onChange={handleChange}
                     className='w-full text-base px-4 py-2.5 rounded-lg border-black/20 dark:border-white/20 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
                   />

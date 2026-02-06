@@ -27,7 +27,15 @@ const Records = () => {
 
   return (
     <section>
-      <div className='container'>
+      <div className='container pt-24'>
+        <div className='text-center mb-8'>
+          <h2 className='mb-6'>OUR STAFF</h2>
+          <p className='text-lg font-normal max-w-2xl mx-auto'>
+            Our team crafts creative strategies that elevate your brand, engage
+            your audience, and drive results.
+          </p>
+        </div>
+        {/*  */}
         <div className='grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 items-center gap-6'>
           {Loading
             ? Array.from({ length: 4 }).map((_, i) => (
