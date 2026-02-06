@@ -1,102 +1,64 @@
 'use client'
-import React from 'react'
+import React, { SetStateAction } from 'react'
 import { useState, useEffect } from 'react'
 
-export default function PastorsForm({
+export default function DaughterForm({
   headerTitle,
   index,
-  daughterFormsList,
-  setDaughterFormsList,
-  numberOfDaughterForms,
-  setNumberOfDaughterForms,
-  numberOfGrandDaughterForms,
-  setNumberOfGrandDaughterForms,
+  grandDaughterFormsList,
+  setGrandDaughterFormsList,
 }: {
   headerTitle: string
   index: number
-  daughterFormsList?: Record<string, any>[]
-  setDaughterFormsList?: React.Dispatch<React.SetStateAction<Record<string, any>[]>>
-  numberOfDaughterForms?: number
-  setNumberOfDaughterForms?: React.Dispatch<React.SetStateAction<number>>
-  numberOfGrandDaughterForms?: number
-  setNumberOfGrandDaughterForms?: React.Dispatch<React.SetStateAction<number>>
+  grandDaughterFormsList?: Record<string, any>[]
+  setGrandDaughterFormsList?: React.Dispatch<React.SetStateAction<Record<string, any>[]>>
 }) {
 
-  const [formData, setFormData] = useState({
-    full_name: '',
-    mobile: '',
-    address: '',
-    Message: '',
-    photo: '',
-    pastor_full_name: '',
-    wife_full_name: '',
-    pastor_contact_number: '',
-    role: '',
-  })
-  const [pastorName, setPastorName] = useState('')
   const [showThanks, setShowThanks] = useState(false)
   const [loader, setLoader] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
   useEffect(() => {
-    const isValid = Object.values(formData).every(
-      (value) => value.trim() !== ''
-    )
-    setIsFormValid(isValid)
-  }, [formData])
+    if (grandDaughterFormsList && grandDaughterFormsList[index]) {
+      const isValid = Object.values(grandDaughterFormsList[index]).every(
+        (value) => value.trim() !== ''
+      )
+      setIsFormValid(isValid)
+    } else {
+      setIsFormValid(false)
+    }
+  }, [grandDaughterFormsList, index])
   const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+    if (setGrandDaughterFormsList) {
+      setGrandDaughterFormsList((prev: any) => {
+        const updatedList = [...prev]
+        updatedList[index] = {
+          ...updatedList[index],
+          [e.target.name]: e.target.value,
+        }
+        return updatedList
+      })
+    }
   }
   const reset = () => {
-    formData.full_name = ''
-    formData.mobile = ''
-    formData.address = ''
-    formData.Message = ''
+    if (setGrandDaughterFormsList) {
+      setGrandDaughterFormsList((prev: any) => {
+        const updatedList = [...prev]
+        updatedList[index] = {
+          ...updatedList[index],
+          full_name: '',
+          mobile: '',
+          address: '',
+          Message: '',
+        }
+        return updatedList
+      })
+    }
   }
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
     setLoader(true)
 
-    if (!process.env.API_SHEET) {
-      console.error('API_SHEET environment variable is not defined')
-      setLoader(false)
-      return
-    }
-
-    fetch(process.env.API_SHEET, {
-      method: 'POST',
-      headers: { 
-        'Content-type': 'application/json',
-        'X-API-KEY': process.env.API_SHEET_KEY || ''
-      },
-      body: JSON.stringify({
-        Name: formData.full_name,
-        PhoneNo: formData.mobile,
-        Address: formData.address,
-        Message: formData.Message,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setShowThanks(true)
-          reset()
-
-          setTimeout(() => {
-            setShowThanks(false)
-          }, 5000)
-        }
-
-        reset()
-      })
-      .catch((error) => {
-        setLoader(false)
-        console.log(error.message)
-      })
   }
 
   const [preview, setPreview] = useState(null);
@@ -113,15 +75,20 @@ export default function PastorsForm({
   };
 
   const deleteChurchEntity = (index: number) => {
-    // In a real app, this would remove the church entity from state or backend
-    console.log(`Deleting church entity at index ${index}`);
+    if (setGrandDaughterFormsList) {
+      setGrandDaughterFormsList((prev: any) => {
+        const updatedList = [...prev]
+        updatedList.splice(index, 1)
+        return updatedList
+      })
+    }
   };
 
   return (
     <div className='container mt-10'>
       <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20'>
         <div className='grid grid-cols-2 w-full flex-row items-center justify-between mb-4'>
-          <div className='align-left'><h2 className='w-full text-lg font-medium mb-4 mt-8'>{pastorName} - {headerTitle}</h2></div>
+          <div className='align-left'><h2 className='w-full text-lg font-medium mb-4 mt-8'>{grandDaughterFormsList?.[index]?.grand_daughter_name || index + 1} - {headerTitle}</h2></div>
           <div className='justify-end flex items-center gap-2'>
             <button
               className="flex items-center gap-2 rounded-lg bg-red-800 px-4 py-2 text-white shadow hover:bg-red-800 active:bg-red-950 transition"
@@ -182,11 +149,8 @@ export default function PastorsForm({
             <input
                 type='text'
                 name='pastor_full_name'
-                value={formData.pastor_full_name}
-                onChange={(e) => {
-                  handleChange(e)
-                  setPastorName(e.target.value)
-                }}
+                value={grandDaughterFormsList?.[index]?.pastor_full_name || ''}
+                onChange={handleChange}
                 className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
             </div>
@@ -199,7 +163,7 @@ export default function PastorsForm({
             <input
                 type='text'
                 name='wife_full_name'
-                value={formData.wife_full_name}
+                value={grandDaughterFormsList?.[index]?.wife_full_name || ''}
                 onChange={handleChange}
                 className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
@@ -216,7 +180,7 @@ export default function PastorsForm({
                 type='text'
                 placeholder='+639XXXXX'
                 name='pastor_contact_number'
-                value={formData.pastor_contact_number}
+                value={grandDaughterFormsList?.[index]?.pastor_contact_number || ''}
                 onChange={handleChange}
                 className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
@@ -229,7 +193,7 @@ export default function PastorsForm({
             </label>
             <select
                 name='role'
-                value={formData.role}
+                value={grandDaughterFormsList?.[index]?.role || ''}
                 onChange={handleChange}
                 className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             >
@@ -250,7 +214,7 @@ export default function PastorsForm({
             <input
                 type='text'
                 name='address'
-                value={formData.address}
+                value={grandDaughterFormsList?.[index]?.address || ''}
                 onChange={handleChange}
                 className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
