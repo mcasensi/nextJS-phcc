@@ -39,6 +39,10 @@ const NavLinkData: NavLinkType[] = [
     href: '/events',
   },
   {
+    label: 'Find A Church',
+    href: '/find-a-church',
+  },
+  {
     label: 'Ministries',
     href: '',
     submenu: [
