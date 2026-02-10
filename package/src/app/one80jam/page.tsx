@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { one80JamGenre } from '../types/one80JamGenre';
 import { one80JamSong } from '../types/one80JamSong';
 import { get } from 'http';
+import { API_URL } from "@/lib/config";
 
 export default function One80Jam() {
     const [value, setValue] = useState('');
@@ -10,14 +11,13 @@ export default function One80Jam() {
     const [allSong, setAllSong] = useState<one80JamSong[]>([])
     const [genreId, setGenreId] = useState<number | null>(null)
     const [activeGenre, setActiveGenre] = useState('')
-    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
     useEffect(() => {
-        fetch(`${apiUrl}/one80jam/genres?skip=0&limit=100`)
+        fetch(`${API_URL}/one80jam/genres?skip=0&limit=100`)
             .then(response => response.json())
             .then(data => setAllGenres(data));
         
-        fetch(`${apiUrl}/one80jam/song_genres?skip=0&limit=100`)
+        fetch(`${API_URL}/one80jam/song_genres?skip=0&limit=100`)
         .then(response => response.json())
         .then(data => {
             // Handle the songs data for the selected genre
@@ -26,7 +26,7 @@ export default function One80Jam() {
     }, []);
 
     const getSongByGenre = (genreId: number) => {
-        fetch(`${apiUrl}/one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`)
+        fetch(`${API_URL}/one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`)
         .then(response => response.json())
         .then(data => {
             // Handle the songs data for the selected genre

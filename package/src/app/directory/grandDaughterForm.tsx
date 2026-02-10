@@ -91,6 +91,7 @@ export default function DaughterForm({
           <div className='align-left'><h2 className='w-full text-lg font-medium mb-4 mt-8'>{grandDaughterFormsList?.[index]?.grand_daughter_name || index + 1} - {headerTitle}</h2></div>
           <div className='justify-end flex items-center gap-2'>
             <button
+              type='button'
               className="flex items-center gap-2 rounded-lg bg-red-800 px-4 py-2 text-white shadow hover:bg-red-800 active:bg-red-950 transition"
               onClick={() => deleteChurchEntity(index)}
             >
@@ -114,111 +115,130 @@ export default function DaughterForm({
         </div>
        
         
-        <div className='sm:flex gap-6 w-1/4'>
+        <div className='sm:flex gap-6 w-full'>
           <div className='mx-0 my-2.5 flex-1'>
-            <div className="flex flex-col items-center gap-4">
-              {/* Avatar */}
-              <div className="relative h-32 w-32">
-                <img
-                  src={preview || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'><rect cx='75' cy='75' width='150' height='150' fill='%23e5e7eb'/></svg>"}
-                  alt="Profile"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-
-              {/* File Input */}
-              <label className="cursor-pointer rounded-lg bg-blue-900 px-4 py-2 text-white hover:bg-indigo-500 transition">
-                Upload Pastor's Photo
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </label>
-            </div>
+            <label
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Full Name <span className='text-sm text-gray-500'>(First Name Last Name)</span>
+            </label>
+            <input
+              type='text'
+              name='full_name'
+              value={grandDaughterFormsList?.[index]?.full_name || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+            />
+          </div>
+          <div className='mx-0 my-2.5 flex-1'>
+            <label
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Wife's Full Name <span className='text-sm text-gray-500'>(First Name Last Name)</span>
+            </label>
+            <input
+              type='text'
+              name='wife_name'
+              value={grandDaughterFormsList?.[index]?.wife_name || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+            />
           </div>
         </div>
         <div className='sm:flex gap-6 w-full'>
-            <div className='mx-0 my-2.5 flex-1'>
+          <div className='mx-0 my-2.5 flex-1'>
             <label
-                htmlFor='lname'
-                className='pb-3 inline-block text-base'>
-                Pastor's Full Name <span className='text-sm text-gray-500'>(First Name Last Name)</span>
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Birthday
             </label>
             <input
-                type='text'
-                name='pastor_full_name'
-                value={grandDaughterFormsList?.[index]?.pastor_full_name || ''}
-                onChange={handleChange}
-                className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              type='date'
+              name='birthday'
+              value={grandDaughterFormsList?.[index]?.birthday || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
-            </div>
-            <div className='mx-0 my-2.5 flex-1'>
+          </div>
+          <div className='mx-0 my-2.5 flex-1'>
             <label
-                htmlFor='lname'
-                className='pb-3 inline-block text-base'>
-                Pastor's Wife Full Name <span className='text-sm text-gray-500'>(First Name Last Name)</span>
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Email
             </label>
             <input
-                type='text'
-                name='wife_full_name'
-                value={grandDaughterFormsList?.[index]?.wife_full_name || ''}
-                onChange={handleChange}
-                className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              type='text'
+              name='email'
+              value={grandDaughterFormsList?.[index]?.email || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
-            </div>
+          </div>
         </div>
         <div className='sm:flex gap-6 w-full'>
-            <div className='mx-0 my-2.5 flex-1'>
+          <div className='mx-0 my-2.5 flex-1'>
             <label
-                htmlFor='lname'
-                className='pb-3 inline-block text-base'>
-                Pastor's Contact Number
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Contact Number
             </label>
             <input
-                type='text'
-                placeholder='+639XXXXX'
-                name='pastor_contact_number'
-                value={grandDaughterFormsList?.[index]?.pastor_contact_number || ''}
-                onChange={handleChange}
-                className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              type='text'
+              placeholder='+639XXXXX'
+              name='mobile'
+              value={grandDaughterFormsList?.[index]?.mobile || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
-            </div>
-            <div className='mx-0 my-2.5 flex-1'>
+          </div>
+          <div className='mx-0 my-2.5 flex-1'>
             <label
-                htmlFor='lname'
-                className='pb-3 inline-block text-base'>
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
                 Role <span className='text-sm text-gray-500'>(if pastor/assistant/evangelist)</span>
             </label>
             <select
-                name='role'
-                value={grandDaughterFormsList?.[index]?.role || ''}
-                onChange={handleChange}
-                className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              name='role'
+              value={grandDaughterFormsList?.[index]?.role || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             >
-                <option value="">Select Role</option>
-                <option value="Pastor">Pastor</option>
-                <option value="Assistant Pastor">Assistant Pastor</option>
-                <option value="Evangelist">Evangelist</option>
+              <option value="">Select Role</option>
+              <option value="Pastor">Pastor</option>
+              <option value="Assistant Pastor">Assistant Pastor</option>
+              <option value="Evangelist">Evangelist</option>
             </select>
-            </div>
+          </div>
         </div>
         <div className='sm:flex gap-6 w-full'>
-            <div className='mx-0 my-2.5 flex-1'>
+          <div className='mx-0 my-2.5 flex-1'>
             <label
-                htmlFor='lname'
-                className='pb-3 inline-block text-base'>
-                Address <span className='text-sm text-gray-500'>(Church Address)</span>
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Address <span className='text-sm text-gray-500'>(Church Address)</span>
             </label>
             <input
-                type='text'
-                name='address'
-                value={grandDaughterFormsList?.[index]?.address || ''}
-                onChange={handleChange}
-                className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              type='text'
+              name='address'
+              value={grandDaughterFormsList?.[index]?.address || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
             />
-            </div>
+          </div>
+          <div className='mx-0 my-2.5 flex-1'>
+            <label
+              htmlFor='lname'
+              className='pb-3 inline-block text-base'>
+              Mother Church City
+            </label>
+            <input
+              type='text'
+              name='mother_church_city'
+              value={grandDaughterFormsList?.[index]?.mother_church_city || ''}
+              onChange={handleChange}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+            />
+          </div>
         </div>
       </div>
     </div>

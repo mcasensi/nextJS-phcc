@@ -1,34 +1,82 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import PastorsForm from './grandDaughterForm'
-import DaughterForm from './daughterForm'
-import GrandDaughterForm from './grandDaughterForm'
-import { WEB_API_URL, API_URL } from "@/lib/config";
+import { useRouter } from 'next/navigation'
+import DaughterForm from '../daughterForm'
+import GrandDaughterForm from '../grandDaughterForm'
+import { API_URL } from "@/lib/config";
 
-export default function Directory() {
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+
+export default function Directory({ params }: Props) {
+  const router = useRouter()
+  const { slug } = React.use(params)
+  const churchLink = slug;
   const [formData, setFormData] = useState({
     full_name: '',
     mobile: '',
     address: '',
-    photo: 'aaaa',
+    photo: '',
     email: '',
     birthday: '',
     wife_name: '',
     mother_church_city: '',
     role: '',
   })
+
   const [showThanks, setShowThanks] = useState(false)
   const [loader, setLoader] = useState(false)
-  const [churchLink, setChurchLink] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
+  const [applicationFound, setApplicationFound] = useState(false)
+  const [applicationEnabled, setApplicationEnabled] = useState(false)
+
+  const churchForm = () => {
+    fetch(`${API_URL}/directory/${churchLink}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'OPENED') {
+          setApplicationEnabled(true)
+          setApplicationFound(true)
+          
+          setFormData({
+            full_name: data.full_name || '',
+            mobile: data.mobile || '',
+            address: data.address || '',
+            photo: data.photo || '',
+            email: data.email || '',
+            birthday: data.birthday || '',
+            wife_name: data.wife_name || '',
+            mother_church_city: data.mother_church_city || '',
+            role: data.role || '',
+          })
+
+          setDaughterFormsList(data.daughters || [])
+          setGrandDaughterFormsList(data.granddaughters || [])
+        }
+      }).catch((error) => {
+        console.log(error.message);
+        setApplicationFound(false)
+        setApplicationEnabled(false)
+      })
+  }
+
+  useEffect(() => {
+    churchForm()
+  }, [])
 
   useEffect(() => {
     const isValid = Object.values(formData).every(
       (value) => value.trim() !== ''
     )
+    console.log('Form:', formData)
     setIsFormValid(isValid)
   }, [formData])
+
   const handleChange = (e: any) => {
     const { name, value } = e.target
     setFormData((prevData) => ({
@@ -52,8 +100,8 @@ export default function Directory() {
     e.preventDefault()
     setLoader(true)
 
-    fetch(`${API_URL}/directory/`, {
-      method: 'POST',
+    fetch(`${API_URL}/directory/${churchLink}`, {
+      method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
         full_name: formData.full_name,
@@ -70,11 +118,14 @@ export default function Directory() {
       }),
     })
     .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      if (data.web_status === 'OPENED') {
+    .then((data) => {
+      if (data.success) {
         setShowThanks(true)
-        setChurchLink(`${WEB_API_URL}/directory/${data.link}`)
+        router.push(`/directory/${data.church_link}`)
+
+        setTimeout(() => {
+          setShowThanks(false)
+        }, 5000)
       }
     })
     .catch((error) => {
@@ -94,10 +145,6 @@ export default function Directory() {
       setPreview(reader.result);
     };
     reader.readAsDataURL(file);
-    setFormData((prevData) => ({
-      ...prevData,
-      photo: 'ahsdjas',
-    }));
   };
 
   return (
@@ -105,15 +152,33 @@ export default function Directory() {
       <div className='container'>
          <div className='row text-center mb-10'>
           <h2 className=' text-center mb-3'>Church Directory</h2>
-          <span className="inline-flex items-center rounded-md bg-green-400 px-2 py-1 text-xs font-extrabold text-white-400 inset-ring inset-ring-green-600/20">NEW APPLICATION</span>
-          <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2' hidden={!showThanks}>
-            Application has been submitted. You can view the application <a href={churchLink} className='font-bold text-primary hover:underline'>{churchLink}</a>
+          {
+            !applicationFound ? (
+               <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2'>
+                <span className="inline-flex items-center rounded-md bg-red-400 px-2 py-1 text-xs font-extrabold text-white-400 inset-ring inset-ring-green-600/20 mb-2">NOT FOUND</span>
+                <br />
+                Sorry the form you are looking for is not found. You can contact us for the link if you have already submitted an application.
+              </div>
+            ) : (
+                 applicationFound && !applicationEnabled ? (
+              <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2'>
+                <span className="inline-flex items-center rounded-md bg-red-400 px-2 py-1 text-xs font-extrabold text-white-400 inset-ring inset-ring-green-600/20">DISABLED</span>
+                <br />
+                Sorry you have to ask permission to view this form. Kindly contact us for an update.
+              </div>
+            ) : (
+                <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2'>
+                  <span className="inline-flex items-center rounded-md bg-green-400 px-2 py-1 font-extrabold text-xs text-white-400 inset-ring inset-ring-green-600/20">ENABLED</span>
+                  <br />
+                  You can now fill out the form to update. Form will be reviewed before publishing.
+                </div>
+            )
+            )
+          }
           </div>
-          </div>
-        <div>
+        <div hidden={!applicationEnabled}>
           <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20' hidden={showThanks} >
             <form
-              onSubmit={handleSubmit}
               className='flex flex-wrap w-full m-auto justify-between'>
               <div className='sm:flex gap-6 w-1/4'>
                 <div className='mx-0 my-2.5 flex-1'>
@@ -172,7 +237,7 @@ export default function Directory() {
                   />
                 </div>
               </div>
-                <div className='sm:flex gap-6 w-full'>
+              <div className='sm:flex gap-6 w-full'>
                 <div className='mx-0 my-2.5 flex-1'>
                   <label
                     htmlFor='lname'
@@ -271,6 +336,7 @@ export default function Directory() {
                 <div className='flex gap-6 w-full flex-wrap justify-center'>
                   <div className='align-left justify-start'>
                     <button
+                      type="button"
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addDaughterPastormForm}
                     >
@@ -279,6 +345,7 @@ export default function Directory() {
                   </div>
                   <div className='align-right justify-start'>
                     <button
+                      type="button"
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addGrandDaughterForm}
                       >
@@ -309,19 +376,24 @@ export default function Directory() {
              
               <div className='mx-0 my-2.5 w-full'>
                 <button
-                  type='submit'
-                  
+                  type='button'
                   className={`border leading-none px-6 text-lg font-medium py-4 rounded-lg 
                     ${
-                      !isFormValid || loader
+                      !isFormValid
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-primary border-primary text-white hover:bg-transparent hover:text-primary cursor-pointer'
                     }`}>
-                  Submit
+                  Update
                 </button>
               </div>
             </form>
           </div>
+          {showThanks && (
+            <div className='text-white bg-primary rounded-full px-4 text-lg mb-4.5 mt-1 absolute flex items-center gap-2'>
+              Thank you for contacting us! We will get back to you soon.
+              <div className='w-3 h-3 rounded-full animate-spin border-2 border-solid border-white border-t-transparent'></div>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -18,7 +18,7 @@ export default function FindAChurch() {
             <div className='lg:col-span-5 col-span-1 lg:w-[80%] sm:w-[80%] w-full align-right'>
               <div>
                 {/* <h4 htmlFor="location" className='mb-10'>Select your location to find a local church near you</h4> */}
-                <h4 htmlFor="location" className='mb-10 '>We apologize for the inconvenience. This service is temporarily unavailable due to maintenance.</h4>
+                <h4 className='mb-10 '>This service is temporarily unavailable due to maintenance.</h4>
                 <select disabled className='w-full text-stone-400 outline-none bg-gray-400 text-white rounded-lg px-4 py-4'>
                   <option value="">Region</option>
                   <option value="state1">State 1</option>
