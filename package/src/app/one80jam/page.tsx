@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { one80JamGenre } from '../types/one80JamGenre';
 import { one80JamSong } from '../types/one80JamSong';
 import { get } from 'http';
@@ -10,15 +10,23 @@ export default function One80Jam() {
     const [allSong, setAllSong] = useState<one80JamSong[]>([])
     const [genreId, setGenreId] = useState<number | null>(null)
     const [activeGenre, setActiveGenre] = useState('')
-    
+    const apiUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL;
+
     useEffect(() => {
-        fetch('http://localhost:8000/one80jam/genres?skip=0&limit=100')
+        fetch(`${apiUrl}/one80jam/genres?skip=0&limit=100`)
             .then(response => response.json())
             .then(data => setAllGenres(data));
+        
+        fetch(`${apiUrl}/one80jam/song_genres?skip=0&limit=100`)
+        .then(response => response.json())
+        .then(data => {
+            // Handle the songs data for the selected genre
+            setAllSong(data);
+        });
     }, []);
 
     const getSongByGenre = (genreId: number) => {
-        fetch(`http://localhost:8000/one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`)
+        fetch(`${apiUrl}/one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`)
         .then(response => response.json())
         .then(data => {
             // Handle the songs data for the selected genre
@@ -26,6 +34,16 @@ export default function One80Jam() {
         });
 
     }
+
+    /* Filter first */
+    const filteredSongs = useMemo(() => {
+        return value
+            ? allSong.filter(song => {
+                console.log(song.song_title.toLowerCase().includes(value.toLowerCase()));
+                return song.song_title.toLowerCase().includes(value.toLowerCase());
+            })
+        : allSong;
+    }, [allSong, value]);
 
   return (
     <section className="bg-stone-900 mx-auto lg:p-10 sm:p-4 md:p-10 text-white xl:mt-30 lg:mt-20 md:mt-20 mt-20">
@@ -58,17 +76,17 @@ export default function One80Jam() {
                     </div>
                 }
               </div>
-            <div className="border border-gray-300 shadow-sm rounded-lg overflow-hidden max-w-sm mx-auto mt-16" hidden={!activeGenre}>
+              <div className="border border-gray-300 shadow-sm rounded-lg overflow-hidden max-w-sm mx-auto mt-16" hidden={activeGenre === '' && value.length == 0}>
                 <table className="w-full text-sm leading-5">
                     <thead className="bg-gray-100">
                     <tr>
-                        <th className="py-3 px-4 text-left font-medium text-gray-600">Total #{activeGenre} Song: {allSong.length}  </th>
+                        <th className="py-3 px-4 text-left font-medium text-gray-600">Total #{activeGenre} Song: {filteredSongs.length}  </th>
                     </tr>
                     </thead>
                     <tbody>
-                    {allSong.map((song) => (
+                    {filteredSongs.map((song) => (
                         <tr key={song.id} className="border-t border-gray-200 bg-gray-200 hover:bg-gray-300"
-                            onClick={() => window.open(`http://localhost:3000/one80jam/${song.slug}`, '_blank')}
+                            onClick={() => window.open(`${apiUrl}/one80jam/${song.slug}`, '_blank')}
                         >
                             <td className="py-3 px-4 text-left text-gray-800">{song.song_title}</td>
                         </tr>
