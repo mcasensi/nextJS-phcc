@@ -1,6 +1,7 @@
 'use client'
 import { use, useEffect, useState } from "react";
 import { one80JamSong } from "../../types/one80JamSong";
+import { API_URL } from "@/lib/config";
 
 type Props = {
   params: {
@@ -15,7 +16,7 @@ export default function Song({ params }: Props) {
 
   useEffect(() => {
     // Fetch song data based on the slug
-    fetch(`http://localhost:8000/one80jam/${params.slug}`)
+    fetch(`${API_URL}/one80jam/${params.slug}`)
       .then(response => response.json())
       .then(data => {
         setSong(data);
@@ -27,7 +28,7 @@ export default function Song({ params }: Props) {
   }, [params.slug]);
 
   const downloadPDF = (id: number) => {
-    fetch(`http://localhost:8000/one80jam/download-pdf/${id}`, {
+    fetch(`${API_URL}/one80jam/download-pdf/${id}`, {
       method: 'GET',
     })
       .then(response => {
@@ -59,7 +60,7 @@ export default function Song({ params }: Props) {
               <p className='text-gray-500'>Song not found.</p>
             ) : (
             <div className='container'>
-              <button className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-2 rounded"
+              <button className="bg-red-700 hover:bg-red-800 text-white mb-5 font-bold py-2 px-2 rounded"
                 onClick={() => downloadPDF(song?.id)}>
                 <div className='flex items-center'>
                   <svg
@@ -74,7 +75,7 @@ export default function Song({ params }: Props) {
                   Export PDF
                   </div>
               </button>
-                <pre className='text-left whitespace-pre-wrap bg-gray-100 p-4 rounded'>{song?.lyrics}</pre>
+                <pre className='text-center whitespace-pre-wrap bg-gray-100 p-4 rounded'>{song?.lyrics}</pre>
               </div>
             )}
           </div>

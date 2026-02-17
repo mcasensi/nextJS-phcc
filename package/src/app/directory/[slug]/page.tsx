@@ -37,10 +37,17 @@ export default function Directory({ params }: Props) {
 
   const churchForm = () => {
     fetch(`${API_URL}/directory/${churchLink}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok && response.status === 404) {
+          setApplicationFound(false)
+          setApplicationEnabled(false)
+          return null
+        }
+        return response.json()
+      })
       .then((data) => {
-        if (data.status === 'OPENED') {
-          setApplicationEnabled(true)
+        if (data && data.link) {
+          setApplicationEnabled(data.status == 'OPENED' ? true : false)
           setApplicationFound(true)
           
           setFormData({
@@ -57,23 +64,21 @@ export default function Directory({ params }: Props) {
 
           setDaughterFormsList(data.daughters || [])
           setGrandDaughterFormsList(data.granddaughters || [])
+
+          setPreview(data.photo || null)
         }
-      }).catch((error) => {
-        console.log(error.message);
-        setApplicationFound(false)
-        setApplicationEnabled(false)
-      })
+      });
   }
 
   useEffect(() => {
     churchForm()
+    console.log(applicationEnabled, applicationFound)
   }, [])
 
   useEffect(() => {
     const isValid = Object.values(formData).every(
       (value) => value.trim() !== ''
     )
-    console.log('Form:', formData)
     setIsFormValid(isValid)
   }, [formData])
 
@@ -119,9 +124,9 @@ export default function Directory({ params }: Props) {
     })
     .then((response) => response.json())
     .then((data) => {
-      if (data.success) {
+      if (data.status) {
         setShowThanks(true)
-        router.push(`/directory/${data.church_link}`)
+        router.push(`/directory/${data.link}`)
 
         setTimeout(() => {
           setShowThanks(false)
@@ -134,7 +139,7 @@ export default function Directory({ params }: Props) {
     })
   }
 
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState<string | null>(null);
   
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -142,7 +147,7 @@ export default function Directory({ params }: Props) {
   
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview(reader.result);
+      setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
@@ -160,11 +165,11 @@ export default function Directory({ params }: Props) {
                 Sorry the form you are looking for is not found. You can contact us for the link if you have already submitted an application.
               </div>
             ) : (
-                 applicationFound && !applicationEnabled ? (
+                 !applicationEnabled ? (
               <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2'>
                 <span className="inline-flex items-center rounded-md bg-red-400 px-2 py-1 text-xs font-extrabold text-white-400 inset-ring inset-ring-green-600/20">DISABLED</span>
                 <br />
-                Sorry you have to ask permission to view this form. Kindly contact us for an update.
+                Sorry you have to ask permission to update this form. Kindly contact us for an update.
               </div>
             ) : (
                 <div className='text-stone text-lg mb-4.5 mt-1 items-center gap-2'>
@@ -176,10 +181,11 @@ export default function Directory({ params }: Props) {
             )
           }
           </div>
-        <div hidden={!applicationEnabled}>
-          <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20' hidden={showThanks} >
+        <div>
+          <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20' hidden={showThanks || !applicationFound} >
             <form
-              className='flex flex-wrap w-full m-auto justify-between'>
+              className='flex flex-wrap w-full m-auto justify-between'
+              onSubmit={handleSubmit}>
               <div className='sm:flex gap-6 w-1/4'>
                 <div className='mx-0 my-2.5 flex-1'>
                   <div className="flex flex-col items-center gap-4">
@@ -194,14 +200,14 @@ export default function Directory({ params }: Props) {
                     </div>
 
                     {/* File Input */}
-                    <label className="cursor-pointer rounded-lg bg-blue-900 px-4 py-2 text-white hover:bg-indigo-500 transition">
+                    <label className="cursor-pointer rounded-lg bg-blue-900 px-4 py-2 text-white hover:bg-indigo-500 transition"  hidden={!applicationEnabled}>
                       Upload Pastor's Photo
                       <input
                         type="file"
                         accept="image/*"
                         name='photo'
                         onChange={handleImageChange}
-                        className="hidden"
+                        disabled={!applicationEnabled}
                       />
                     </label>
                   </div>
@@ -219,7 +225,8 @@ export default function Directory({ params }: Props) {
                     name='full_name'
                     value={formData.full_name}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+                    disabled={!applicationEnabled}
                   />
                 </div>
                 <div className='mx-0 my-2.5 flex-1'>
@@ -233,7 +240,8 @@ export default function Directory({ params }: Props) {
                     name='wife_name'
                     value={formData.wife_name}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    disabled={!applicationEnabled}
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
                   />
                 </div>
               </div>
@@ -249,7 +257,8 @@ export default function Directory({ params }: Props) {
                     name='birthday'
                     value={formData.birthday}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+                    disabled={!applicationEnabled}
                   />
                 </div>
                 <div className='mx-0 my-2.5 flex-1'>
@@ -262,8 +271,9 @@ export default function Directory({ params }: Props) {
                     type='text'
                     name='email'
                     value={formData.email}
+                    disabled={!applicationEnabled}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
                   />
                 </div>
               </div>
@@ -279,8 +289,9 @@ export default function Directory({ params }: Props) {
                     placeholder='+639XXXXX'
                     name='mobile'
                     value={formData.mobile}
+                    disabled={!applicationEnabled}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
                   />
                 </div>
                 <div className='mx-0 my-2.5 flex-1'>
@@ -292,8 +303,9 @@ export default function Directory({ params }: Props) {
                   <select
                     name='role'
                     value={formData.role}
+                    disabled={!applicationEnabled}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500x'
                   >
                     <option value="">Select Role</option>
                     <option value="Pastor">Pastor</option>
@@ -313,8 +325,9 @@ export default function Directory({ params }: Props) {
                     type='text'
                     name='address'
                     value={formData.address}
+                    disabled={!applicationEnabled}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
                   />
                 </div>
                 <div className='mx-0 my-2.5 flex-1'>
@@ -328,17 +341,19 @@ export default function Directory({ params }: Props) {
                     name='mother_church_city'
                     value={formData.mother_church_city}
                     onChange={handleChange}
-                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+                    disabled={!applicationEnabled}
+                    className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
                   />
                 </div>
               </div>
-              <div className='container justify-center mt-10'>
+              <div className='container justify-center mt-10' hidden={!applicationEnabled}>
                 <div className='flex gap-6 w-full flex-wrap justify-center'>
                   <div className='align-left justify-start'>
                     <button
                       type="button"
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addDaughterPastormForm}
+                      disabled={!applicationEnabled}
                     >
                       Add Daughter Church
                     </button>
@@ -348,7 +363,8 @@ export default function Directory({ params }: Props) {
                       type="button"
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addGrandDaughterForm}
-                      >
+                      disabled={!applicationEnabled}
+                    >
                       Add GrandDaughter Church</button>
                   </div>
                 </div>
@@ -361,6 +377,7 @@ export default function Directory({ params }: Props) {
                   index={i}
                   daughterFormsList={daughterFormsList}
                   setDaughterFormsList={setDaughterFormsList}
+                  applicationEnabled={applicationEnabled}
                 />
               ))}
 
@@ -371,12 +388,14 @@ export default function Directory({ params }: Props) {
                   index={i}
                   grandDaughterFormsList={grandDaughterFormsList}
                   setGrandDaughterFormsList={setGrandDaughterFormsList}
+                  applicationEnabled={applicationEnabled}
                 />
               ))}
              
-              <div className='mx-0 my-2.5 w-full'>
+              <div className='mx-0 my-2.5 w-full' hidden={!applicationEnabled}>
                 <button
-                  type='button'
+                  type='submit'
+                  disabled={!isFormValid}
                   className={`border leading-none px-6 text-lg font-medium py-4 rounded-lg 
                     ${
                       !isFormValid
@@ -388,12 +407,6 @@ export default function Directory({ params }: Props) {
               </div>
             </form>
           </div>
-          {showThanks && (
-            <div className='text-white bg-primary rounded-full px-4 text-lg mb-4.5 mt-1 absolute flex items-center gap-2'>
-              Thank you for contacting us! We will get back to you soon.
-              <div className='w-3 h-3 rounded-full animate-spin border-2 border-solid border-white border-t-transparent'></div>
-            </div>
-          )}
         </div>
       </div>
     </section>
