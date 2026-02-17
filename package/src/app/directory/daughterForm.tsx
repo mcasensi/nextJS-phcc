@@ -7,11 +7,13 @@ export default function DaughterForm({
   index,
   daughterFormsList,
   setDaughterFormsList,
+  applicationEnabled
 }: {
   headerTitle: string
   index: number
   daughterFormsList?: Record<string, any>[]
   setDaughterFormsList?: React.Dispatch<React.SetStateAction<Record<string, any>[]>>
+  applicationEnabled?: boolean
 }) {
 
   const [pastorName, setPastorName] = useState('')
@@ -22,7 +24,7 @@ export default function DaughterForm({
   useEffect(() => {
     if (daughterFormsList && daughterFormsList[index]) {
       const isValid = Object.values(daughterFormsList[index]).every(
-        (value) => value.trim() !== ''
+        (value) => String(value).trim() !== ''
       )
       setIsFormValid(isValid)
     } else {
@@ -50,7 +52,12 @@ export default function DaughterForm({
           full_name: '',
           mobile: '',
           address: '',
-          Message: '',
+          mother_church_city: '',
+          email: '',
+          birthday: '',
+          wife_name: '',
+          role: '',
+          photo: '',
         }
         return updatedList
       })
@@ -72,10 +79,15 @@ export default function DaughterForm({
         'X-API-KEY': process.env.API_SHEET_KEY || ''
       },
       body: JSON.stringify({
-        Name: formData.full_name,
-        PhoneNo: formData.mobile,
-        Address: formData.address,
-        Message: formData.Message,
+        full_name: daughterFormsList?.[index]?.full_name,
+        mobile: daughterFormsList?.[index]?.mobile,
+        address: daughterFormsList?.[index]?.address,
+        mother_church_city: daughterFormsList?.[index]?.mother_church_city,
+        email: daughterFormsList?.[index]?.email,
+        birthday: daughterFormsList?.[index]?.birthday,
+        wife_name: daughterFormsList?.[index]?.wife_name,
+        role: daughterFormsList?.[index]?.role,
+        photo: daughterFormsList?.[index]?.photo,
       }),
     })
       .then((response) => response.json())
@@ -108,6 +120,16 @@ export default function DaughterForm({
       setPreview(reader.result);
     };
     reader.readAsDataURL(file);
+    if (setDaughterFormsList) {
+      setDaughterFormsList((prevData) => {
+        const updatedList = [...prevData];
+        updatedList[index] = {
+          ...updatedList[index],
+          photo: 'daughter_photo.jpg', // In a real app, this would be the file name or URL of the uploaded photo
+        };
+        return updatedList;
+      });
+    }
   };
 
   const deleteChurchEntity = (index: number) => {
@@ -127,10 +149,11 @@ export default function DaughterForm({
       <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20'>
         <div className='grid grid-cols-2 w-full flex-row items-center justify-between mb-4'>
           <div className='align-left'><h2 className='w-full text-lg font-medium mb-4 mt-8'>{pastorName} - {headerTitle}</h2></div>
-          <div className='justify-end flex items-center gap-2'>
+          <div className='justify-end flex items-center gap-2' hidden={!applicationEnabled}>
             <button
               className="flex items-center gap-2 rounded-lg bg-red-800 px-4 py-2 text-white shadow hover:bg-red-800 active:bg-red-950 transition"
               onClick={() => deleteChurchEntity(index)}
+              disabled={!applicationEnabled}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +189,7 @@ export default function DaughterForm({
               </div>
 
               {/* File Input */}
-              <label className="cursor-pointer rounded-lg bg-blue-900 px-4 py-2 text-white hover:bg-indigo-500 transition">
+              <label className="cursor-pointer rounded-lg bg-blue-900 px-4 py-2 text-white hover:bg-indigo-500 transition" hidden={!applicationEnabled}>
                 Upload Pastor's Photo
                 <input
                   type="file"
@@ -191,7 +214,8 @@ export default function DaughterForm({
               name='full_name'
               value={daughterFormsList?.[index]?.full_name || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             />
           </div>
           <div className='mx-0 my-2.5 flex-1'>
@@ -205,7 +229,8 @@ export default function DaughterForm({
               name='wife_name'
               value={daughterFormsList?.[index]?.wife_name || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              disabled={!applicationEnabled}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
             />
           </div>
         </div>
@@ -221,7 +246,8 @@ export default function DaughterForm({
               name='birthday'
               value={daughterFormsList?.[index]?.birthday || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             />
           </div>
           <div className='mx-0 my-2.5 flex-1'>
@@ -235,7 +261,8 @@ export default function DaughterForm({
               name='email'
               value={daughterFormsList?.[index]?.email || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              disabled={!applicationEnabled}
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
             />
           </div>
         </div>
@@ -252,7 +279,8 @@ export default function DaughterForm({
               name='mobile'
               value={daughterFormsList?.[index]?.mobile || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             />
           </div>
           <div className='mx-0 my-2.5 flex-1'>
@@ -265,7 +293,8 @@ export default function DaughterForm({
               name='role'
               value={daughterFormsList?.[index]?.role || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             >
               <option value="">Select Role</option>
               <option value="Pastor">Pastor</option>
@@ -286,7 +315,8 @@ export default function DaughterForm({
               name='address'
               value={daughterFormsList?.[index]?.address || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             />
           </div>
           <div className='mx-0 my-2.5 flex-1'>
@@ -300,7 +330,8 @@ export default function DaughterForm({
               name='mother_church_city'
               value={daughterFormsList?.[index]?.mother_church_city || ''}
               onChange={handleChange}
-              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
+              className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-300 disabled:text-gray-500'
+              disabled={!applicationEnabled}
             />
           </div>
         </div>

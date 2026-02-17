@@ -11,12 +11,15 @@ export default function Directory() {
     full_name: '',
     mobile: '',
     address: '',
-    photo: 'aaaa',
     email: '',
     birthday: '',
     wife_name: '',
     mother_church_city: '',
     role: '',
+  })
+
+  const [photoData, setPhotoData] = useState({
+    photo: null,
   })
   const [showThanks, setShowThanks] = useState(false)
   const [loader, setLoader] = useState(false)
@@ -25,7 +28,7 @@ export default function Directory() {
 
   useEffect(() => {
     const isValid = Object.values(formData).every(
-      (value) => value.trim() !== ''
+       (value) => String(value).trim() !== ''
     )
     setIsFormValid(isValid)
   }, [formData])
@@ -52,29 +55,42 @@ export default function Directory() {
     e.preventDefault()
     setLoader(true)
 
+    const payload = JSON.stringify({
+      full_name: formData.full_name,
+      mobile: formData.mobile,
+      address: formData.address,
+      email: formData.email,
+      birthday: formData.birthday,
+      wife_name: formData.wife_name,
+      mother_church_city: formData.mother_church_city,
+      role: formData.role,
+      'daughters': daughterFormsList,
+      'granddaughters': grandDaughterFormsList
+    });
+
     fetch(`${API_URL}/directory/`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        full_name: formData.full_name,
-        mobile: formData.mobile,
-        address: formData.address,
-        photo: formData.photo,
-        email: formData.email,
-        birthday: formData.birthday,
-        wife_name: formData.wife_name,
-        mother_church_city: formData.mother_church_city,
-        role: formData.role,
-        'daughters': daughterFormsList,
-        'granddaughters': grandDaughterFormsList
-      }),
+      body: payload
     })
     .then((response) => response.json())
       .then((data) => {
         console.log(data);
-      if (data.web_status === 'OPENED') {
-        setShowThanks(true)
-        setChurchLink(`${WEB_API_URL}/directory/${data.link}`)
+      if (data.link) {
+       
+        const formData = new FormData();
+        formData.append('photo', photoData.photo);
+
+        fetch(`${API_URL}/directory/uploadfile/${data.id}`, {
+          method: 'PUT',
+          body: formData
+        })
+        .then((response) => response.json())
+        .then(() => {
+          setShowThanks(true)
+          setChurchLink(`${WEB_API_URL}/directory/${data.link}`)
+
+        })
       }
     })
     .catch((error) => {
@@ -86,18 +102,15 @@ export default function Directory() {
   const [preview, setPreview] = useState(null);
   
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-      if (!file) return;
+  const file = e.target.files[0];
+    if (!file) return;
+    
   
-    const reader = new FileReader();
+  const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result);
-    };
+    }
     reader.readAsDataURL(file);
-    setFormData((prevData) => ({
-      ...prevData,
-      photo: 'ahsdjas',
-    }));
   };
 
   return (
@@ -114,7 +127,9 @@ export default function Directory() {
           <div className='relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20' hidden={showThanks} >
             <form
               onSubmit={handleSubmit}
-              className='flex flex-wrap w-full m-auto justify-between'>
+              className='flex flex-wrap w-full m-auto justify-between'
+              encType="multipart/form-data"
+            >
               <div className='sm:flex gap-6 w-1/4'>
                 <div className='mx-0 my-2.5 flex-1'>
                   <div className="flex flex-col items-center gap-4">
@@ -135,7 +150,12 @@ export default function Directory() {
                         type="file"
                         accept="image/*"
                         name='photo'
-                        onChange={handleImageChange}
+                        onChange={(event) => {
+                          handleImageChange(event)
+                          if (event.target.files) {
+                            setPhotoData({ photo: event.target.files[0] })
+                          }
+                        }}
                         className="hidden"
                       />
                     </label>
@@ -271,6 +291,7 @@ export default function Directory() {
                 <div className='flex gap-6 w-full flex-wrap justify-center'>
                   <div className='align-left justify-start'>
                     <button
+                      type='button'
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addDaughterPastormForm}
                     >
@@ -279,6 +300,7 @@ export default function Directory() {
                   </div>
                   <div className='align-right justify-start'>
                     <button
+                      type='button'
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
                       onClick={addGrandDaughterForm}
                       >
@@ -294,6 +316,7 @@ export default function Directory() {
                   index={i}
                   daughterFormsList={daughterFormsList}
                   setDaughterFormsList={setDaughterFormsList}
+                  applicationEnabled={true}
                 />
               ))}
 
@@ -304,16 +327,16 @@ export default function Directory() {
                   index={i}
                   grandDaughterFormsList={grandDaughterFormsList}
                   setGrandDaughterFormsList={setGrandDaughterFormsList}
+                  applicationEnabled={true}
                 />
               ))}
              
               <div className='mx-0 my-2.5 w-full'>
                 <button
                   type='submit'
-                  
                   className={`border leading-none px-6 text-lg font-medium py-4 rounded-lg 
                     ${
-                      !isFormValid || loader
+                      !isFormValid 
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-primary border-primary text-white hover:bg-transparent hover:text-primary cursor-pointer'
                     }`}>
