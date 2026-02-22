@@ -300,7 +300,11 @@ export default function Chords() {
                         </button>
                     </div>
 
-                    <Element name="chordslayout" className="element">
+                    <Element
+                        name="chordslayout"
+                        className="element"
+                        hidden={!activeSong}
+                    >
                         <div className="w-full h-[70vh] sm:h-[70vh] md:h-[80vh] lg:h-[85vh] rounded-lg border border-gray-200 dark:border-gray-800">
                             <iframe
                                 hidden={!activeSong}

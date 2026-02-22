@@ -6,6 +6,12 @@ import DaughterForm from "./daughterForm";
 import GrandDaughterForm from "./grandDaughterForm";
 import { WEB_API_URL, API_URL } from "@/lib/config";
 import { File } from "buffer";
+import {
+    getAllRegions,
+    getBarangaysByMunicipality,
+    getMunicipalitiesByProvince,
+    getProvincesByRegion,
+} from "@aivangogh/ph-address";
 
 export default function Directory() {
     const [formData, setFormData] = useState({
@@ -18,7 +24,9 @@ export default function Directory() {
         mother_church_city: "",
         role: "",
         region: "",
-        city: "",
+        province: "",
+        barangay: "",
+        municipality: "",
         longitude: "",
         latitude: "",
         landmark: "",
@@ -39,6 +47,12 @@ export default function Directory() {
     const [loader, setLoader] = useState(false);
     const [churchLink, setChurchLink] = useState("");
     const [isFormValid, setIsFormValid] = useState(false);
+
+    const regions = getAllRegions();
+    const [provinceList, setProvinceList] = useState<any[]>([]);
+    console.log(formData.region, formData.region);
+    const [municipalityList, setMunicipalityList] = useState<any[]>([]);
+    const [barangayList, setBarangayList] = useState<any[]>([]);
 
     useEffect(() => {
         const isValid = Object.values(formData).every(
@@ -83,7 +97,9 @@ export default function Directory() {
             mother_church_city: formData.mother_church_city,
             role: formData.role,
             region: formData.region,
-            city: formData.city,
+            province: formData.province,
+            municipality: formData.municipality,
+            barangay: formData.barangay,
             longitude: formData.longitude,
             latitude: formData.latitude,
             landmark: formData.landmark,
@@ -320,6 +336,26 @@ export default function Directory() {
                                         htmlFor="lname"
                                         className="pb-3 inline-block text-base"
                                     >
+                                        Mother Church City
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="mother_church_city"
+                                        value={formData.mother_church_city}
+                                        onChange={handleChange}
+                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0"
+                                    />
+                                </div>
+                            </div>
+                            <div className="sm:flex gap-6 w-full border-b border-gray-200 dark:border-gray-800 pt-6">
+                                <h4 className="pb-4">Church Address</h4>
+                            </div>
+                            <div className="sm:flex gap-6 w-full pt-6">
+                                <div className="mx-0 my-2.5 flex-1">
+                                    <label
+                                        htmlFor="lname"
+                                        className="pb-3 inline-block text-base"
+                                    >
                                         Address{" "}
                                         <span className="text-sm text-gray-500">
                                             (Stree Name, Barangay, etc.)
@@ -338,47 +374,141 @@ export default function Directory() {
                                         htmlFor="lname"
                                         className="pb-3 inline-block text-base"
                                     >
-                                        Mother Church City
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="mother_church_city"
-                                        value={formData.mother_church_city}
-                                        onChange={handleChange}
-                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0"
-                                    />
-                                </div>
-                            </div>
-                            <div className="sm:flex gap-6 w-full">
-                                <div className="mx-0 my-2.5 flex-1">
-                                    <label
-                                        htmlFor="lname"
-                                        className="pb-3 inline-block text-base"
-                                    >
                                         Region
                                     </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="region"
                                         value={formData.region}
-                                        onChange={handleChange}
+                                        onChange={(e) => {
+                                            handleChange(e);
+
+                                            setProvinceList([
+                                                ...getProvincesByRegion(
+                                                    e.target.value,
+                                                ),
+                                            ]);
+                                            setMunicipalityList([
+                                                ...getMunicipalitiesByProvince(
+                                                    e.target.value,
+                                                ),
+                                            ]);
+                                        }}
                                         className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0"
-                                    />
+                                    >
+                                        <option value="">Select Region</option>
+                                        {regions.map((region) => (
+                                            <option value={region?.psgcCode}>
+                                                {region?.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+                                <div
+                                    className="mx-0 my-2.5 flex-1"
+                                    hidden={provinceList.length === 0}
+                                >
+                                    <label
+                                        htmlFor="lname"
+                                        className="pb-3 inline-block text-base"
+                                    >
+                                        Province
+                                    </label>
+                                    <select
+                                        name="province"
+                                        value={formData.province}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            setMunicipalityList([
+                                                ...getMunicipalitiesByProvince(
+                                                    e.target.value,
+                                                ),
+                                            ]);
+                                            setBarangayList([
+                                                ...getBarangaysByMunicipality(
+                                                    e.target.value,
+                                                ),
+                                            ]);
+                                        }}
+                                        disabled={!formData.region}
+                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-500"
+                                    >
+                                        <option value="">
+                                            Select Province
+                                        </option>
+                                        {provinceList.map((province) => (
+                                            <option value={province?.psgcCode}>
+                                                {province?.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div
+                                className="sm:flex gap-6 w-full"
+                                hidden={municipalityList.length === 0}
+                            >
                                 <div className="mx-0 my-2.5 flex-1">
                                     <label
                                         htmlFor="lname"
                                         className="pb-3 inline-block text-base"
                                     >
-                                        City
+                                        Municipality/City
                                     </label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        value={formData.city}
+                                    <select
+                                        name="municipality"
+                                        value={formData.municipality}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            setBarangayList([
+                                                ...getBarangaysByMunicipality(
+                                                    e.target.value,
+                                                ),
+                                            ]);
+                                        }}
+                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-500"
+                                    >
+                                        <option value="">
+                                            Select Municipality/City
+                                        </option>
+                                        {municipalityList.map(
+                                            (municipality) => (
+                                                <option
+                                                    value={
+                                                        municipality?.psgcCode
+                                                    }
+                                                >
+                                                    {municipality?.name}
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </div>
+                                <div
+                                    className="mx-0 my-2.5 flex-1"
+                                    hidden={barangayList.length === 0}
+                                >
+                                    <label
+                                        htmlFor="lname"
+                                        className="pb-3 inline-block text-base"
+                                    >
+                                        Barangay
+                                    </label>
+                                    <select
+                                        name="barangay"
+                                        value={formData.barangay}
                                         onChange={handleChange}
-                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0"
-                                    />
+                                        disabled={!formData.municipality}
+                                        className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-500"
+                                    >
+                                        <option value="">
+                                            Select Municipality
+                                        </option>
+                                        {barangayList.map((barangay) => (
+                                            <option value={barangay?.name}>
+                                                {barangay?.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
                             <div className="sm:flex gap-6 w-full">
