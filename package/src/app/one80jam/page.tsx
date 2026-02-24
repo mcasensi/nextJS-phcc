@@ -15,11 +15,11 @@ export default function One80Jam() {
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/one80jam/genres?skip=0&limit=100`)
+        fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
 
-        fetch(`${API_URL}/one80jam/song_genres?skip=0&limit=100`)
+        fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => {
                 // Handle the songs data for the selected genre
@@ -29,7 +29,7 @@ export default function One80Jam() {
 
     const getSongByGenre = (genreId: number) => {
         fetch(
-            `${API_URL}/one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`,
+            `${API_URL}/public-one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`,
         )
             .then((response) => response.json())
             .then((data) => {

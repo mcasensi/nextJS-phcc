@@ -43,7 +43,7 @@ export default function FindAChurch() {
                                     disabled
                                     className="w-full text-stone-400 outline-none bg-gray-400 text-white rounded-lg px-4 py-4 mt-3"
                                 >
-                                    <option value="">Municipality</option>
+                                    <option value="">Municipality/City</option>
                                     <option value="state1">State 1</option>
                                     <option value="state2">State 2</option>
                                     <option value="state3">State 3</option>
