@@ -12,11 +12,12 @@ export default function Directory() {
     });
     const [showThanks, setShowThanks] = useState(false);
     const [loader, setLoader] = useState(false);
-    const [applicationEnabled, _] = useState(false);
+    const [applicationEnabled, setApplicationEnabled] = useState(true);
     const [churchLink, setChurchLink] = useState("");
 
     async function handleSubmit(values: any) {
         setLoader(true);
+        setApplicationEnabled(false);
 
         const payload = JSON.stringify({
             ...values,

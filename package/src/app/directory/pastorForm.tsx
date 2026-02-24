@@ -94,17 +94,12 @@ export default function PastorForm({
     const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         formik.handleChange(e);
         setProvinceList([...getProvincesByRegion(e.target.value)]);
-        if (e.target.value === "130000000") {
-            formik.setFieldValue("province", "");
-        }
         setMunicipalityList([...getMunicipalitiesByProvince(e.target.value)]);
-        setBarangayList([]);
     };
 
     const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         formik.handleChange(e);
         setMunicipalityList([...getMunicipalitiesByProvince(e.target.value)]);
-        setBarangayList([]);
     };
 
     const handleMunicipalityChange = (
