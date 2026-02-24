@@ -13,7 +13,7 @@ const Timeline = () => {
     const monthToday = new Date().getMonth() + 1;
 
     useEffect(() => {
-        fetch(`${API_URL}/events/?skip=0&limit=100&month=` + monthToday)
+        fetch(`${API_URL}/public-events/?skip=0&limit=100&month=` + monthToday)
             .then((res) => res.json())
             .then((data) => {
                 setEventList(data);
