@@ -4,18 +4,19 @@ import { one80JamSong } from "../../types/one80JamSong";
 import { API_URL } from "@/lib/config";
 
 type Props = {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 };
 
 export default function Song({ params }: Props) {
+    const { slug } = use(params);
     const [song, setSong] = useState<one80JamSong | null>(null);
     const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
         // Fetch song data based on the slug
-        fetch(`${API_URL}/public-one80jam/${params.slug}`)
+        fetch(`${API_URL}/public-one80jam/${slug}`)
             .then((response) => response.json())
             .then((data) => {
                 setSong(data);
@@ -25,7 +26,7 @@ export default function Song({ params }: Props) {
                 console.log("Error fetching song:", error);
                 setNotFound(true);
             });
-    }, [params.slug]);
+    }, [slug]);
 
     const downloadPDF = (id: number) => {
         fetch(`${API_URL}/public-one80jam/download-pdf/${id}`, {
@@ -54,14 +55,14 @@ export default function Song({ params }: Props) {
     return (
         <section>
             <div className="container pt-32 text-center">
-                <h1 className="text-4xl font-bold mb-8">{params.slug}</h1>
+                <h1 className="text-4xl font-bold mb-8">{slug}</h1>
                 {notFound ? (
                     <p className="text-gray-500">Song not found.</p>
                 ) : (
                     <div className="container">
                         <button
                             className="bg-red-700 hover:bg-red-800 text-white mb-5 font-bold py-2 px-2 rounded"
-                            onClick={() => downloadPDF(song?.id)}
+                            onClick={() => song?.id !== undefined && downloadPDF(song.id)}
                         >
                             <div className="flex items-center">
                                 <svg

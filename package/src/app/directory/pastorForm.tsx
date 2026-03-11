@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -9,7 +9,6 @@ import {
     getProvincesByRegion,
 } from "@aivangogh/ph-address";
 import { useState, SetStateAction } from "react";
-import { API_URL } from "@/lib/config";
 
 const validationSchema = Yup.object().shape({
     full_name: Yup.string().required("Full name is required"),
@@ -30,6 +29,26 @@ const validationSchema = Yup.object().shape({
     years_in_ministry: Yup.string().required("Years in ministry is required"),
 });
 
+type PastorFormValues = {
+    full_name: string;
+    mobile: string;
+    address: string;
+    email: string;
+    birthday: string;
+    wife_name: string;
+    mother_church_city: string;
+    role: string;
+    region: string;
+    province: string;
+    barangay: string;
+    municipality: string;
+    longitude: string;
+    latitude: string;
+    landmark: string;
+    years_in_ministry: string;
+    photo: string;
+};
+
 export default function PastorForm({
     handleSubmit,
     loader,
@@ -37,13 +56,13 @@ export default function PastorForm({
     setPhotoData,
     initialValues,
 }: {
-    handleSubmit: (values: any) => Promise<void>;
+    handleSubmit: (values: PastorFormValues) => Promise<void>;
     loader: boolean;
     applicationEnabled: boolean;
     setPhotoData: React.Dispatch<SetStateAction<{ photo: File | null }>>;
-    initialValues: any;
+    initialValues: Partial<PastorFormValues> | null;
 }) {
-    const defaultValues = {
+    const defaultValues: PastorFormValues = {
         full_name: "",
         mobile: "",
         address: "",
@@ -60,10 +79,14 @@ export default function PastorForm({
         latitude: "",
         landmark: "",
         years_in_ministry: "",
+        photo: "",
     };
 
-    const formik = useFormik({
-        initialValues: initialValues || defaultValues,
+    const formik = useFormik<PastorFormValues>({
+        initialValues: {
+            ...defaultValues,
+            ...(initialValues || {}),
+        },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             await handleSubmit(values);
@@ -72,15 +95,20 @@ export default function PastorForm({
 
     useEffect(() => {
         if (initialValues) {
-            formik.setValues(initialValues);
+            const nextValues: PastorFormValues = {
+                ...defaultValues,
+                ...initialValues,
+            };
+
+            formik.setValues(nextValues);
             handleRegionChange({
-                target: { value: formik.values.region },
+                target: { value: nextValues.region },
             } as React.ChangeEvent<HTMLSelectElement>);
             handleProvinceChange({
-                target: { value: formik.values.province },
+                target: { value: nextValues.province },
             } as React.ChangeEvent<HTMLSelectElement>);
             handleMunicipalityChange({
-                target: { value: formik.values.municipality },
+                target: { value: nextValues.municipality },
             } as React.ChangeEvent<HTMLSelectElement>);
         }
     }, [initialValues]);

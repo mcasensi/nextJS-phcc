@@ -1,9 +1,6 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import PastorsForm from './grandDaughterForm'
-import DaughterForm from './daughterForm'
-import GrandDaughterForm from './grandDaughterForm'
 
 export default function Directory() {
   const [formData, setFormData] = useState({
@@ -13,6 +10,7 @@ export default function Directory() {
     Message: '',
     photo: '',
     pastor_full_name: '',
+    age: '',
     wife_full_name: '',
     pastor_contact_number: '',
     mother_church_city: '',
@@ -103,8 +101,8 @@ export default function Directory() {
                   </label>
                   <input
                     type='text'
-                    name='pastor_age'
-                    value={formData.pastor_age}
+                    name='formData.age'
+                    value={formData.age}
                     onChange={handleChange}
                     className='w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0'
                   />
