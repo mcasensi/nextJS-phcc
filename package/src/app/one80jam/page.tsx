@@ -10,49 +10,51 @@ export default function One80Jam() {
     const [value, setValue] = useState("");
     const [allGenres, setAllGenres] = useState<one80JamGenre[]>([]);
     const [allSong, setAllSong] = useState<one80JamSong[]>([]);
-    const [genreId, setGenreId] = useState<number | null>(null);
-    const [activeGenre, setActiveGenre] = useState("");
+    const [genreId, setGenreId] = useState<number | 0>(0);
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
     useEffect(() => {
         fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
-
-        fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
-            .then((response) => response.json())
-            .then((data) => {
-                // Handle the songs data for the selected genre
-                setAllSong(data);
-            });
+       fetchSongs();     
     }, []);
 
-    const getSongByGenre = (genreId: number) => {
-        fetch(
-            `${API_URL}/public-one80jam/song_genres?skip=0&limit=100&genres_id=${genreId}`,
-        )
+    const fetchSongs = () => {
+        fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
             .then((response) => response.json())
-            .then((data) => {
-                // Handle the songs data for the selected genre
-                setAllSong(data);
-            });
+            .then((data) => setAllSong(data));
+    };
+
+    const getSongByGenre = (genreId: number) => {
+        setAllSong(allSong.filter((song) => {
+            return Array.isArray(song.genre_id)
+                ? song.genre_id.includes(genreId)
+                : song.genre_id === genreId;
+        }));
     };
 
     /* Filter first */
     const filteredSongs = useMemo(() => {
         return value
             ? allSong.filter((song) => {
-                  console.log(
-                      song.song_title
-                          .toLowerCase()
-                          .includes(value.toLowerCase()),
-                  );
                   return song.song_title
                       .toLowerCase()
                       .includes(value.toLowerCase());
               })
             : allSong;
-    }, [allSong, value]);
+    }, [allSong, value, genreId]);
+
+    const handleSetGenreId = (id: number) => {
+        console.log("Selected Genre ID:", id);
+        if(id === 0) {
+            setGenreId(0);
+            fetchSongs();
+        } else {
+            setGenreId(id);
+            getSongByGenre(id);
+        }
+    }
 
     return (
         <section className="bg-stone-900 mx-auto lg:p-10 sm:p-4 md:p-10 text-white xl:mt-30 lg:mt-20 md:mt-20 mt-20">
@@ -70,58 +72,69 @@ export default function One80Jam() {
                         <input
                             className="text-stone-400 outline-none w-1/2"
                             type="text"
-                            onChange={(event) => setValue(event.target.value)}
+                            onChange={(event) => {
+                                setValue(event.target.value);
+                                filteredSongs;
+                            }}
                             value={value}
                             placeholder="Search Title of the Song"
                         />
                     </div>
                     {allGenres && (
                         <div className="flex flex-wrap justify-center items-center pt-2">
-                            {allGenres.map((genre) => [
+                            <div>
+                                <div className="p-2">
+                                    <button
+                                        type="button"
+                                        className={`py-2 px-4 bg-blue-900 text-stone-100 p-2 rounded-full leading-none flex items-center text-xs ${genreId === 0 ? "bg-green-500" : ""}`}
+                                        onClick={() => {
+                                            handleSetGenreId(0);
+                                        }}
+                                    >
+                                        ALL
+                                    </button>
+                                </div>
+                            </div>
+                            {allGenres.map((genre) => (
                                 <div key={genre.id}>
                                     <div className="p-2">
                                         <button
                                             type="button"
-                                            className="py-2 px-4 bg-blue-900 text-stone-100 p-2 rounded-full leading-none flex items-center text-xs"
+                                            className={`py-2 px-4 bg-blue-900 text-stone-100 p-2 rounded-full leading-none flex items-center text-xs ${genreId === genre.id ? "bg-green-500" : ""}`}
                                             onClick={() => {
-                                                setGenreId(genre.id);
-                                                setActiveGenre(genre.name);
-                                                getSongByGenre(genre.id);
+                                                handleSetGenreId(genre.id);
                                             }}
                                         >
                                             #{genre.name}
                                         </button>
                                     </div>
-                                </div>,
-                            ])}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
 
                 <div className="border border-gray-300 shadow-sm mt-5 rounded-lg overflow-hidden max-w-sm mx-auto mb-6">
-                    {/* Scroll container */}
                     <div className="max-h-40 overflow-y-auto">
-                        {" "}
-                        {/* adjust height as needed */}
                         <table className="w-full text-sm leading-5">
                             <thead className="bg-gray-100 sticky top-0 z-10">
                                 <tr>
-                                    {value.length > 0 ? (
-                                        <th className="py-3 px-4 text-left font-medium text-gray-600">
-                                            Search "{value}" Total{" "}
-                                            {filteredSongs.length} Found
-                                        </th>
-                                    ) : (
-                                        <th className="py-3 px-4 text-left font-medium text-gray-600">
-                                            All Songs Total{" "}
-                                            {filteredSongs.length}
-                                        </th>
-                                    )}
+                                    <th
+                                        className={`py-3 px-4 text-left font-medium text-gray-600 ${
+                                            genreId ? "bg-gray-200" : ""
+                                        }`}
+                                    >
+                                        {genreId
+                                            ? `Genre: ${allGenres.find((genre) => genre.id === genreId)?.name ?? ""}`
+                                            : allSong.length > 0
+                                            ? `All Songs Total ${allSong.length}`
+                                            : ""}
+                                    </th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                {filteredSongs.map((song) => (
+                                {(Array.isArray(allSong) ? allSong : []).map((song) => (
                                     <tr
                                         key={song.id}
                                         className={`cursor-pointer ${
