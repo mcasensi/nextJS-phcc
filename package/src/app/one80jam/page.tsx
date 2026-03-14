@@ -37,13 +37,13 @@ export default function One80Jam() {
     /* Filter first */
     const filteredSongs = useMemo(() => {
         return value
-            ? allSong.filter((song) => {
-                  return song.song_title
+            ? allSong.filter((song) =>
+                  song.song_title
                       .toLowerCase()
-                      .includes(value.toLowerCase());
-              })
+                      .includes(value.toLowerCase())
+              )
             : allSong;
-    }, [allSong, value, genreId]);
+    }, [allSong, value]);
 
     const handleSetGenreId = (id: number) => {
         console.log("Selected Genre ID:", id);
@@ -74,7 +74,6 @@ export default function One80Jam() {
                             type="text"
                             onChange={(event) => {
                                 setValue(event.target.value);
-                                filteredSongs;
                             }}
                             value={value}
                             placeholder="Search Title of the Song"
@@ -134,7 +133,7 @@ export default function One80Jam() {
                             </thead>
 
                             <tbody>
-                                {(Array.isArray(allSong) ? allSong : []).map((song) => (
+                                {(Array.isArray(filteredSongs) ? filteredSongs : []).map((song) => (
                                     <tr
                                         key={song.id}
                                         className={`cursor-pointer ${
