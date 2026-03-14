@@ -5,4 +5,5 @@ export type one80JamSong = {
   lyrics: string
   slug: string
   song_title: string
+  one80jam_song_id: number
 }

@@ -5,6 +5,7 @@ import { one80JamSong } from "../types/one80JamSong";
 import { get } from "http";
 import { API_URL, WEB_API_URL } from "@/lib/config";
 import { scroller, Element } from "react-scroll";
+import process from "process";
 
 export default function One80Jam() {
     const [value, setValue] = useState("");
@@ -167,7 +168,7 @@ export default function One80Jam() {
                         <button
                             onClick={() =>
                                 window.open(
-                                    `${WEB_API_URL}/one80jam/${activeSong?.slug}`,
+                                    `${process.env.NEXT_PUBLIC_WEB_API_URL}/one80jam/${activeSong?.slug}`,
                                     "_blank",
                                 )
                             }
