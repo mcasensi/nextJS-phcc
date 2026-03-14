@@ -2,6 +2,7 @@
 import { use, useEffect, useState } from "react";
 import { one80JamSong } from "../../types/one80JamSong";
 import { API_URL } from "@/lib/config";
+import { env } from "process";
 
 type Props = {
     params: Promise<{
@@ -20,15 +21,14 @@ export default function Song({ params }: Props) {
             .then((response) => response.json())
             .then((data) => {
                 setSong(data);
-                console.log("Fetched song data:", data);
             })
             .catch((error) => {
-                console.log("Error fetching song:", error);
                 setNotFound(true);
             });
     }, [slug]);
 
     const downloadPDF = (id: number) => {
+        console.log("Downloading PDF for song ID:", id);
         fetch(`${API_URL}/public-one80jam/download-pdf/${id}`, {
             method: "GET",
         })
@@ -53,16 +53,19 @@ export default function Song({ params }: Props) {
     };
 
     return (
+        song === null && !notFound ? (
+            <p className="text-gray-500">Loading...</p>
+        ) : (
         <section>
             <div className="container pt-32 text-center">
-                <h1 className="text-4xl font-bold mb-8">{slug}</h1>
+                <h1 className="text-4xl font-bold mb-8">{song?.song_title}</h1>
                 {notFound ? (
                     <p className="text-gray-500">Song not found.</p>
                 ) : (
                     <div className="container">
                         <button
                             className="bg-red-700 hover:bg-red-800 text-white mb-5 font-bold py-2 px-2 rounded"
-                            onClick={() => song?.id !== undefined && downloadPDF(song.id)}
+                            onClick={() => downloadPDF(song!.one80jam_song_id)}
                         >
                             <div className="flex items-center">
                                 <svg
@@ -88,5 +91,5 @@ export default function Song({ params }: Props) {
                 )}
             </div>
         </section>
-    );
+    ));
 }
