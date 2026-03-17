@@ -97,7 +97,7 @@ export default function Directory() {
                   <label
                     htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    Pastor's Age <span className='text-sm text-gray-500'>(First Name Last Name)</span>
+                    Email Address
                   </label>
                   <input
                     type='text'
@@ -113,7 +113,7 @@ export default function Directory() {
                   <label
                     htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    Pastor's Contact Number
+                    Contact Number
                   </label>
                   <input
                     type='text'
@@ -148,7 +148,7 @@ export default function Directory() {
                   <label
                     htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    Address <span className='text-sm text-gray-500'>(Church Address)</span>
+                    Church Address
                   </label>
                   <input
                     type='text'
@@ -162,7 +162,7 @@ export default function Directory() {
                   <label
                     htmlFor='lname'
                     className='pb-3 inline-block text-base'>
-                    Mother Church City
+                    Expected day & time of arrival:
                   </label>
                   <input
                     type='text'
