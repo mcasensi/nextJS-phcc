@@ -14,19 +14,18 @@ const validationSchema = Yup.object().shape({
     full_name: Yup.string().required("Full name is required"),
     mobile: Yup.string().required("Mobile number is required"),
     address: Yup.string().required("Address is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    birthday: Yup.string().required("Birthday is required"),
-    wife_name: Yup.string().required("Wife's name is required"),
-    mother_church_city: Yup.string().required("Mother church city is required"),
-    role: Yup.string().required("Role is required"),
-    region: Yup.string().required("Region is required"),
-    province: Yup.string(),
-    municipality: Yup.string(),
-    barangay: Yup.string(),
-    longitude: Yup.string(),
-    latitude: Yup.string(),
-    landmark: Yup.string(),
-    years_in_ministry: Yup.string().required("Years in ministry is required"),
+    email: Yup.string().email("Invalid email").nullable(),
+    birthday: Yup.string().nullable(),
+    wife_name: Yup.string().nullable(),
+    mother_church_city: Yup.string().nullable(),
+    role: Yup.string().nullable(),
+    region: Yup.string().nullable(),
+    province: Yup.string().nullable(),
+    municipality: Yup.string().nullable(),
+    barangay: Yup.string().nullable(),
+    longitude: Yup.string().nullable(),
+    latitude: Yup.string().nullable(),
+    landmark: Yup.string().nullable(),
 });
 
 type PastorFormValues = {
@@ -45,7 +44,6 @@ type PastorFormValues = {
     longitude: string;
     latitude: string;
     landmark: string;
-    years_in_ministry: string;
     photo: string;
 };
 
@@ -78,7 +76,6 @@ export default function PastorForm({
         longitude: "",
         latitude: "",
         landmark: "",
-        years_in_ministry: "",
         photo: "",
     };
 
@@ -351,23 +348,6 @@ export default function PastorForm({
                                 </p>
                             )}
                     </div>
-                    <div className="mx-0 my-2.5 flex-1">
-                        <label className="pb-3 inline-block text-base">
-                            Year/s & Month/s in Ministry
-                        </label>
-                        <input
-                            type="text"
-                            {...formik.getFieldProps("years_in_ministry")}
-                            className="w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-500"
-                            disabled={!applicationEnabled}
-                        />
-                        {formik.touched.years_in_ministry &&
-                            formik.errors.years_in_ministry && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {formik.errors.years_in_ministry}
-                                </p>
-                            )}
-                    </div>
                 </div>
 
                 {/* Address Section */}
@@ -562,12 +542,7 @@ export default function PastorForm({
                 >
                     <button
                         type="submit"
-                        className={`border leading-none px-6 text-lg font-medium py-4 rounded-lg 
-                        ${
-                            !formik.isValid || loader
-                                ? "bg-primary-300 text-gray-500 cursor-not-allowed"
-                                : "bg-primary border-primary text-white hover:bg-transparent hover:text-primary cursor-pointer"
-                        }`}
+                        className="border leading-none px-6 text-lg font-medium py-4 rounded-lg bg-primary border-primary text-white hover:bg-transparent hover:text-primary cursor-pointer"
                     >
                         {loader ? "Submitting..." : "Submit"}
                     </button>
