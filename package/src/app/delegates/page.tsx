@@ -1,6 +1,13 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react'
+import AttendeesForm from './AttendeesForm'
+
+type Attendee = {
+  id: string;
+  name: string;
+  age: string;
+}
 
 export default function Directory() {
   const [formData, setFormData] = useState({
@@ -20,6 +27,9 @@ export default function Directory() {
   const [loader, setLoader] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
+  const [attendees, setAttendees] = useState<Attendee[]>([]);
+  const [showAttendeesForm, setShowAttendeesForm] = useState(false)
+
   useEffect(() => {
     const isValid = Object.values(formData).every(
       (value) => value.trim() !== ''
@@ -33,38 +43,26 @@ export default function Directory() {
       [name]: value,
     }))
   }
-  const reset = () => {
-    formData.full_name = ''
-    formData.mobile = ''
-    formData.address = ''
-    formData.Message = ''
-  }
-
-  const addDaughterPastormForm = () => {
-    setDaughterFormsList((prev) => [...(prev || []), {}])
-  }
-
-  const addGrandDaughterForm = () => {
-    setGrandDaughterFormsList((prev) => [...(prev || []), {}])
-  }
-
-  const [daughterFormsList, setDaughterFormsList] = useState<Record<string, any>[]>([])
-  const [grandDaughterFormsList, setGrandDaughterFormsList] = useState<Record<string, any>[]>([])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoader(true)
-
-    console.log(
-      'Main Form Data:',
-      formData,
-      'Daughter Forms Data:',
-      daughterFormsList
-    );
-
-   
+    setLoader(true)   
   }
 
+  const addAttendeesForm = () => {
+    setShowAttendeesForm(true)
+    setAttendees((prev) => [...prev, { id: crypto.randomUUID(), name: '', age: '' }]);
+  }
+
+
+
+  const removeAttendees = (id: string) => {
+    setAttendees((prev) => {
+      const next = prev.filter((attendee) => attendee.id !== id);
+      if (next.length === 0) setShowAttendeesForm(false);
+      return next;
+    });
+  }
 
   return (
     <section id='contact' className='scroll-mt-12. pt-42'>
@@ -173,19 +171,38 @@ export default function Directory() {
                   />
                 </div>
               </div>
-              <div className='container justify-center mt-10'>
+              <div className='container justify-center mt-10 mb-8'>
                 <div className='flex gap-6 w-full flex-wrap justify-center'>
                   <div className='justify-center flex'>
                     <button
                       className='bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded'
-                      onClick={addDaughterPastormForm}
+                      onClick={addAttendeesForm}
                     >
                       Add Attendees
                     </button>
                   </div>
                 </div>
               </div>
-             
+              <div className='container justify-center'>
+              {showAttendeesForm && (
+                <div className='row w-full justify-center'>
+                  {attendees.map((attendee) => (
+                    <div className='border border-black/20 dark:border-white/20 w-full m-auto justify-between items-center gap-4 mb-7 rounded-lg px-6 py-2' key={attendee.id}>
+                      <button className='p-2 text-red-600 bg-red-50 dark:bg-red-950 hover:bg-red-100 dark:hover:bg-red-900 rounded-lg transition-colors'
+                      onClick={() => removeAttendees(attendee.id)}
+                      >
+                        <svg className='w-6 h-6' fill='currentColor' viewBox='0 0 20 20'>
+                          <path fillRule='evenodd' d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z' clipRule='evenodd' />
+                        </svg>
+                      </button>
+                      <AttendeesForm key={attendee.id} />
+                    </div>
+                   
+                  ))}
+                </div>
+              )
+              }
+              </div>
              
               <div className='mx-0 my-2.5 w-full'>
                 <button
