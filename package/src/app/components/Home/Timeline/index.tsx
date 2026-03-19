@@ -53,12 +53,7 @@ const Timeline = () => {
                                         })}
                                     </label>
                                     <p className="mb-4 mt-2 text-neutral-600 dark:text-neutral-300">
-                                        Lorem ipsum dolor sit amet, consectetur
-                                        adipiscing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna
-                                        aliqua. Ut enim ad minim veniam, quis
-                                        nostrud exercitation ullamco laboris
-                                        nisi ut aliquip ex ea commodo consequat.
+                                        {event.description}
                                     </p>
                                 </div>
                             </li>
