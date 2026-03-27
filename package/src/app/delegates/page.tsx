@@ -73,8 +73,8 @@ export default function Directory() {
     const [showAttendeesForm, setShowAttendeesForm] = useState(false);
 
     useEffect(() => {
-        const isValid = Object.values(formik.values).every(
-            (value) => value.trim() !== "",
+        const isValid = Object.values(formik.values).every((value) =>
+            typeof value === "string" ? value.trim() !== "" : true,
         );
         setIsFormValid(isValid);
     }, [formik.values]);
