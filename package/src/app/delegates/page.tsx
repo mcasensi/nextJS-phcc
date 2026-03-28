@@ -38,7 +38,7 @@ export default function Directory() {
             setLoader(true);
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates`,
+                    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates/`,
                     {
                         method: "POST",
                         headers: { "Content-type": "application/json" },
@@ -56,7 +56,7 @@ export default function Directory() {
                         setAttendees([]);
                         setSuccessData(data);
                         setLoader(false);
-                    }, 5000);
+                    }, 3000);
                 }
             } catch (error) {
                 console.error(error);
@@ -125,7 +125,18 @@ export default function Directory() {
                     >
                         Please fill out the form below to register as a delegate
                         for the upcoming event. We look forward to welcoming you
-                        for this coming conference
+                        for this coming conference. You can also view all the
+                        list of delegates{" "}
+                        <div className="mt-1 flex items-center justify-center gap-2">
+                            <label className="font-bold text-primary hover:underline">
+                                <a
+                                    href={`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                    className="font-bold hover:underline"
+                                >
+                                    {`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                </a>
+                            </label>
+                        </div>
                     </label>
                     <div
                         className="relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20"
@@ -600,7 +611,7 @@ export default function Directory() {
                         </form>
                     </div>
                     {showThanks && (
-                        <div className="text-white px-4 text-lg mb-2 mt-1 absolute grid-cols-1 items-center">
+                        <div className="text-white px-4 text-lg mb-2 mt-1 grid-cols-1 items-center">
                             <label className="text-center block text-lg font-medium text-gray-900 dark:text-white mb-3">
                                 Thank you for submitting your application! We
                                 will review your application and get back to you
