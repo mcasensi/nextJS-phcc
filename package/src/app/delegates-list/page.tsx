@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 interface Delegate {
     id: string;
-    email: string;
+    email_address: string;
     mobile: string;
     status: string;
     expected_day_of_arrival: string;
@@ -37,27 +37,25 @@ export default function DelegatesListPage() {
     const [statusFilter, setStatusFilter] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(() => {
-        const fetchDelegates = async () => {
-            try {
-                const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates`,
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to fetch delegates");
-                }
-                const data = await response.json();
-                setDelegates(data);
-                setFilteredDelegates(data);
-            } catch (err) {
-                setError(
-                    err instanceof Error ? err.message : "An error occurred",
-                );
-            } finally {
-                setLoading(false);
+    const fetchDelegates = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates/`,
+            );
+            if (!response.ok) {
+                throw new Error("Failed to fetch delegates");
             }
-        };
+            const data = await response.json();
+            setDelegates(data);
+            setFilteredDelegates(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchDelegates();
     }, []);
 
@@ -67,7 +65,9 @@ export default function DelegatesListPage() {
                 d.attendees.some((a) =>
                     a.name.toLowerCase().includes(searchQuery.toLowerCase()),
                 ) ||
-                d.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                d.email_address
+                    ?.toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
                 d.mobile?.includes(searchQuery);
 
             const matchesStatus =
@@ -158,7 +158,7 @@ export default function DelegatesListPage() {
                                     className="hover:bg-gray-50"
                                 >
                                     <td className="border border-gray-300 px-4 py-2">
-                                        {delegate.email}
+                                        {delegate.email_address}
                                     </td>
                                     <td className="border border-gray-300 px-4 py-2">
                                         {delegate.mobile}
