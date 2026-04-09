@@ -13,7 +13,7 @@ const Timeline = () => {
     const monthToday = new Date().getMonth() + 1;
 
     useEffect(() => {
-        fetch(`${API_URL}/public-events/?skip=0&limit=100&month=` + monthToday)
+        fetch(`${API_URL}/public-events?skip=0&limit=100&month=` + monthToday)
             .then((res) => res.json())
             .then((data) => {
                 setEventList(data);
@@ -37,7 +37,7 @@ const Timeline = () => {
                         {eventList.map((event, index) => (
                             <li key={index}>
                                 <div className="flex-start flex items-center">
-                                    <div className="-ms-[9px] -mt-2 me-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
+                                    <div className="-ms-2.25 -mt-2 me-3 flex h-4 w-4 items-center justify-center rounded-full bg-primary dark:bg-primary-500"></div>
                                     <h4 className="-mt-2 text-xl font-semibold">
                                         {event.title}
                                     </h4>
@@ -50,10 +50,23 @@ const Timeline = () => {
                                             year: "numeric",
                                             month: "long",
                                             day: "numeric",
-                                        })}
+                                        })}{" "}
+                                        -{" "}
+                                        {new Date(event.end).toLocaleDateString(
+                                            "en-US",
+                                            {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric",
+                                            },
+                                        )}
                                     </label>
                                     <p className="mb-4 mt-2 text-neutral-600 dark:text-neutral-300">
-                                        {event.description}
+                                        {event.description
+                                            ?.split("\n")
+                                            .map((line, i) => (
+                                                <div key={i}>{line}</div>
+                                            ))}
                                     </p>
                                 </div>
                             </li>

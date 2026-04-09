@@ -11,6 +11,7 @@ export default function One80Jam() {
     const [value, setValue] = useState("");
     const [allGenres, setAllGenres] = useState<one80JamGenre[]>([]);
     const [allSong, setAllSong] = useState<one80JamSong[]>([]);
+    const [allFilteredSong, setAllFilteredSong] = useState<one80JamSong[]>([]);
     const [genreId, setGenreId] = useState<number | 0>(0);
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
@@ -18,44 +19,45 @@ export default function One80Jam() {
         fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
-       fetchSongs();     
+        fetchSongs();
     }, []);
 
     const fetchSongs = () => {
         fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
             .then((response) => response.json())
-            .then((data) => setAllSong(data));
+            .then((data: one80JamSong[]) => setAllSong(data));
     };
 
     const getSongByGenre = (genreId: number) => {
-        setAllSong(allSong.filter((song) => {
-            return Array.isArray(song.genre_id)
-                ? song.genre_id.includes(genreId)
-                : song.genre_id === genreId;
-        }));
+        setAllFilteredSong(
+            allSong.filter((song) => {
+                return Array.isArray(song.genre_id)
+                    ? song.genre_id.includes(genreId)
+                    : song.genre_id === genreId;
+            }),
+        );
     };
 
     /* Filter first */
     const filteredSongs = useMemo(() => {
         return value
-            ? allSong.filter((song) =>
-                  song.song_title
-                      .toLowerCase()
-                      .includes(value.toLowerCase())
+            ? allFilteredSong.filter((song) =>
+                  song.song_title.toLowerCase().includes(value.toLowerCase()),
               )
-            : allSong;
-    }, [allSong, value]);
+            : allFilteredSong;
+    }, [allFilteredSong, value]);
 
     const handleSetGenreId = (id: number) => {
         console.log("Selected Genre ID:", id);
-        if(id === 0) {
+        if (id === 0) {
             setGenreId(0);
             fetchSongs();
+            setAllFilteredSong(allSong);
         } else {
             setGenreId(id);
             getSongByGenre(id);
         }
-    }
+    };
 
     return (
         <section className="bg-stone-900 mx-auto lg:p-10 sm:p-4 md:p-10 text-white xl:mt-30 lg:mt-20 md:mt-20 mt-20">
@@ -127,14 +129,17 @@ export default function One80Jam() {
                                         {genreId
                                             ? `Genre: ${allGenres.find((genre) => genre.id === genreId)?.name ?? ""}`
                                             : allSong.length > 0
-                                            ? `All Songs Total ${allSong.length}`
-                                            : ""}
+                                              ? `All Songs Total ${allSong.length}`
+                                              : ""}
                                     </th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                {(Array.isArray(filteredSongs) ? filteredSongs : []).map((song) => (
+                                {(Array.isArray(filteredSongs)
+                                    ? filteredSongs
+                                    : []
+                                ).map((song) => (
                                     <tr
                                         key={song.id}
                                         className={`cursor-pointer ${
@@ -146,6 +151,11 @@ export default function One80Jam() {
                                     >
                                         <td className="py-3 px-4 border-t border-gray-300">
                                             {song.song_title}
+                                        </td>
+                                        <td className="py-3 px-4 border-t border-gray-300">
+                                            {Array.isArray(song.genre_name)
+                                                ? song.genre_name.join(", ")
+                                                : song.genre_name}
                                         </td>
                                     </tr>
                                 ))}
