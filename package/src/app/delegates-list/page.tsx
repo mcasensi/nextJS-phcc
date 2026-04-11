@@ -144,10 +144,7 @@ export default function DelegatesListPage() {
                                     Total
                                 </th>
                                 <th className="border border-gray-300 px-4 py-2 text-left">
-                                    Arrival Date
-                                </th>
-                                <th className="border border-gray-300 px-4 py-2 text-left">
-                                    Arrival Time
+                                    Arrival
                                 </th>
                             </tr>
                         </thead>
@@ -193,9 +190,9 @@ export default function DelegatesListPage() {
                                     </td>
                                     <td className="border border-gray-300 px-4 py-2">
                                         {delegate.expected_day_of_arrival}
-                                    </td>
-                                    <td className="border border-gray-300 px-4 py-2">
-                                        {delegate.expected_time_of_arrival}
+                                        <div>
+                                            {delegate.expected_time_of_arrival}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
