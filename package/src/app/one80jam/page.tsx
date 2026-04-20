@@ -16,14 +16,14 @@ export default function One80Jam() {
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
+        fetch(`${API_URL}/public-one80jam/genres`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
         fetchSongs();
     }, []);
 
     const fetchSongs = () => {
-        fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
+        fetch(`${API_URL}/public-one80jam/song_genres`)
             .then((response) => response.json())
             .then((data: one80JamSong[]) => setAllSong(data));
     };
