@@ -11,6 +11,7 @@
     "dependencies": {
         "@aivangogh/ph-address": "^2025.3.11",
         "@iconify/react": "^6.0.0",
+        "@react-pdf-viewer/get-file": "^3.12.0",
         "@supabase/ssr": "^0.8.0",
         "@supabase/supabase-js": "^2.97.0",
         "formik": "^2.4.9",
@@ -20,10 +21,11 @@
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-leaflet": "^5.0.0",
+        "react-pdf-viewer": "^0.1.0",
         "react-scroll": "^1.9.3",
         "react-slick": "^0.30.3",
         "slick-carousel": "^1.8.1",
-        "yum": "^0.1.1",
+        "yum": "^0.0.1",
         "yup": "^1.7.1"
     },
     "devDependencies": {

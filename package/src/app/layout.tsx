@@ -5,6 +5,9 @@ import Header from "./components/Layout/Header";
 import { ThemeProvider } from "next-themes";
 import Footer from "./components/Layout/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+// If you use default-layout plugin, also:
+// import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 const DMSans = DM_Sans({
     variable: "--font-DM-Sans",
