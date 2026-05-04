@@ -1,4 +1,10 @@
-function Brochure({ params }: { params: { slug: string } }) {
+export default async function Brochure({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}) {
+    const { slug } = await params;
+
     const brochures: { [key: string]: { file: string; label: string } } = {
         "122023": {
             file: "/images/brochure/122023.pdf",
@@ -26,7 +32,7 @@ function Brochure({ params }: { params: { slug: string } }) {
         },
     };
 
-    const brochure = brochures[params.slug];
+    const brochure = brochures[slug];
 
     if (!brochure) {
         return (
@@ -74,5 +80,3 @@ function Brochure({ params }: { params: { slug: string } }) {
         </section>
     );
 }
-
-export default Brochure;
