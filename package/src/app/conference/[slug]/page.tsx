@@ -1,17 +1,5 @@
 "use client";
 import React from "react";
-import dynamic from "next/dynamic";
-import { getFilePlugin, RenderDownloadProps } from "@react-pdf-viewer/get-file";
-
-const Worker = dynamic(
-    () => import("@react-pdf-viewer/core").then((m) => m.Worker),
-    { ssr: false },
-);
-
-const Viewer = dynamic(
-    () => import("@react-pdf-viewer/core").then((m) => m.Viewer),
-    { ssr: false },
-);
 
 export default function Conference({
     params,
@@ -20,8 +8,6 @@ export default function Conference({
 }) {
     const { slug } = React.use(params);
 
-    const getFilePluginInstance = getFilePlugin();
-    const { Download } = getFilePluginInstance;
     var conferences = [
         {
             monthYear: "052022",
@@ -82,25 +68,11 @@ export default function Conference({
 
     return (
         <div className="mt-23">
-            <Download>
-                {(action: RenderDownloadProps) => (
-                    <button
-                        onClick={action.onClick}
-                        className="mb-2 w-full inline-block px-6 py-2.5 bg-red-800 text-white font-medium text-xs leading-normal uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-900 active:shadow-lg transition duration-150 ease-in-out"
-                    >
-                        {conference.btn}
-                    </button>
-                )}
-            </Download>
-
-            <div style={{ height: "80vh" }}>
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                    <Viewer
-                        plugins={[getFilePluginInstance]}
-                        fileUrl={conference.file}
-                    />
-                </Worker>
-            </div>
+            <iframe
+                src={conference.file}
+                style={{ width: "100%", height: "80vh" }}
+                title="PDF Viewer"
+            />
         </div>
     );
 }
