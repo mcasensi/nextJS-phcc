@@ -1,10 +1,3 @@
-import ContactForm from './components/ContactForm'
-import Category from './components/Home/Category'
-import Hero from './components/Home/Hero'
-import Schedule from './components/Home/Schedule'
-import Project from './components/Home/Project'
-import Review from './components/Home/Review'
-import Timeline from './components/Home/Timeline'
 import Schedule2 from './components/Home/Schedule2'
 
 export default function Home() {
