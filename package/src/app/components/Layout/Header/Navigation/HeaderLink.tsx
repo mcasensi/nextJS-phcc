@@ -23,8 +23,10 @@ const HeaderLink: React.FC<{ item: NavLinkType }> = ({ item }) => {
       <Link
         to={item.href || "#"}
         className={`text-base flex font-normal text-darkblue dark:text-white hover:text-primary dark:hover:text-primary ${
-          item.href === pathname ? "!text-primary dark:!text-primary" : ""
-        } ${pathname.startsWith(`/${item.label.toLowerCase()}`) ? "text-primary dark:!text-primary" : ""} text-black hover:text-primary dark:text-white dark:hover:text-primary`}
+          item.href === pathname || pathname.startsWith(`/${item.label.toLowerCase()}`)
+            ? "!text-primary dark:!text-primary"
+            : ""
+        }`}
       >
         {item.label}
         {item.submenu && (

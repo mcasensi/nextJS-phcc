@@ -8,10 +8,10 @@ import { FooterLinkType } from "@/app/types/footerlinks";
 import { FooterLinkData } from "@/data/siteData";
 
 const Footer = () => {
-  const [footerlink, setFooterlink] = useState<FooterLinkType[]>([]);
+  const [footerLinks, setFooterLinks] = useState<FooterLinkType[]>([]);
 
   useEffect(() => {
-    setFooterlink(FooterLinkData);
+    setFooterLinks(FooterLinkData);
   }, []);
 
   return (
@@ -49,7 +49,7 @@ const Footer = () => {
           </div>
           <div className="lg:col-span-4 sm:col-span-1">
             <div className="lg:flex sm:grid grid-cols-2 gap-8 sm:grid-cols-3">
-              {footerlink.map((product, i) => (
+              {footerLinks.map((product, i) => (
                 <div key={i} className="group relative col-span-2">
                   <p className="text-xl font-semibold mb-9">{product.section}</p>
                   <ul>

@@ -1,5 +1,5 @@
 const readEnv = (key: string): string => {
-  const viteEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
+  const viteEnv = import.meta.env as Record<string, string | boolean | undefined>;
   if (viteEnv?.[key]) return viteEnv[key] as string;
 
   if (typeof process !== "undefined" && process.env?.[key]) {
