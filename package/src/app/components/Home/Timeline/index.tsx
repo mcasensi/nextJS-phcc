@@ -6,9 +6,8 @@ import { API_URL } from "@/lib/config";
 
 const Timeline = () => {
   const [eventList, setEventList] = useState<Event[]>([]);
-  const monthToday = new Date().getMonth() + 1;
-
   useEffect(() => {
+    const monthToday = new Date().getMonth() + 1;
     fetch(`${API_URL}/public-events/?skip=0&limit=100&month=` + monthToday)
       .then((res) => res.json())
       .then((data) => {
@@ -17,7 +16,7 @@ const Timeline = () => {
       .catch((err) => {
         console.error("Error fetching events:", err);
       });
-  }, [monthToday]);
+  }, []);
 
   return (
     <section className="scroll-mt-12">

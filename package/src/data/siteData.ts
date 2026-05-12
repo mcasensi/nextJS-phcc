@@ -78,7 +78,7 @@ export const FooterLinkData: FooterLinkType[] = [
   {
     section: "PIONEERING COUNTRIES",
     links: [
-      { label: "Vietname", href: "/" },
+      { label: "Vietnam", href: "/" },
       { label: "Laos", href: "/" },
       { label: "Thailand", href: "/" },
       { label: "Japan", href: "/" },
