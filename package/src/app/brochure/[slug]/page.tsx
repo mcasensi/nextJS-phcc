@@ -1,36 +1,35 @@
 import { useParams } from "react-router-dom";
 
+const BROCHURES: Record<string, { file: string; label: string }> = {
+  "122023": {
+    file: "/images/brochure/122023.pdf",
+    label: "December 2023",
+  },
+  "052024": {
+    file: "/images/brochure/052024.pdf",
+    label: "May 2024",
+  },
+  "112024": {
+    file: "/images/brochure/112024.pdf",
+    label: "November 2024",
+  },
+  "052025": {
+    file: "/images/brochure/052025.pdf",
+    label: "May 2025",
+  },
+  "112025": {
+    file: "/images/brochure/calledToBuild2025.jpg",
+    label: "November 2025",
+  },
+  "052026": {
+    file: "/images/brochure/052026.png",
+    label: "May 2026",
+  },
+};
+
 export default function Brochure() {
   const { slug = "" } = useParams<{ slug: string }>();
-
-  const brochures: { [key: string]: { file: string; label: string } } = {
-    "122023": {
-      file: "/images/brochure/122023.pdf",
-      label: "December 2023",
-    },
-    "052024": {
-      file: "/images/brochure/052024.pdf",
-      label: "May 2024",
-    },
-    "112024": {
-      file: "/images/brochure/112024.pdf",
-      label: "November 2024",
-    },
-    "052025": {
-      file: "/images/brochure/052025.pdf",
-      label: "May 2025",
-    },
-    "112025": {
-      file: "/images/brochure/calledToBuild2025.jpg",
-      label: "November 2025",
-    },
-    "052026": {
-      file: "/images/brochure/052026.png",
-      label: "May 2026",
-    },
-  };
-
-  const brochure = brochures[slug];
+  const brochure = BROCHURES[slug];
 
   if (!brochure) {
     return (
