@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import { useState, useEffect, use } from "react";
 import { scroller, Element } from "react-scroll";
-import { API_URL } from "@/lib/config";
+import { API_URL, CONFERENCE_SONG_SHEET_ID, FAST_SONG_SHEET_ID, SLOW_SONG_SHEET_ID } from "@/lib/config";
 interface FastSong {
     id: number; // Unique identifier for the product
     name: string; // Category of the product
