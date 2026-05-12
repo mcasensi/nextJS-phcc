@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { API_URL, WEB_API_URL } from "@/lib/config";
 
 type Attendee = {
     id: string;
@@ -41,7 +42,7 @@ export default function Directory() {
             setLoader(true);
             try {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates/`,
+                    `${API_URL}/public-delegates/`,
                     {
                         method: "POST",
                         headers: { "Content-type": "application/json" },
@@ -139,10 +140,10 @@ export default function Directory() {
                         <div className="mt-1 flex items-center justify-center gap-2">
                             <label className="font-bold text-primary hover:underline">
                                 <a
-                                    href={`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                    href={`${WEB_API_URL}/delegates-list`}
                                     className="font-bold hover:underline"
                                 >
-                                    {`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                    {`${WEB_API_URL}/delegates-list`}
                                 </a>
                             </label>
                         </div>
@@ -740,10 +741,10 @@ export default function Directory() {
                             <div className="mt-1 flex items-center justify-center gap-2">
                                 <label className="font-bold text-primary hover:underline">
                                     <a
-                                        href={`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                        href={`${WEB_API_URL}/delegates-list`}
                                         className="font-bold hover:underline"
                                     >
-                                        {`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
+                                        {`${WEB_API_URL}/delegates-list`}
                                     </a>
                                 </label>
                             </div>

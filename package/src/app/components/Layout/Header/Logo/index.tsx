@@ -1,25 +1,24 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import { Link } from "react-router-dom";
 
 const Logo = () => {
   return (
-    <Link href='/'>
-      <Image
-        src='/images/logo/cropped-PHLogo300dpi.webp'
-        alt='logo'
+    <Link to="/">
+      <img
+        src="/images/logo/cropped-PHLogo300dpi.webp"
+        alt="logo"
         width={151}
         height={56}
-        className='lg:w-80 sm:w-48 block dark:hidden'        
+        className="lg:w-80 sm:w-48 block dark:hidden"
       />
-      <Image
-        src='/images/logo/cropped-PHLogo300dpi.webp'
-        alt='logo'
+      <img
+        src="/images/logo/cropped-PHLogo300dpi.webp"
+        alt="logo"
         width={151}
         height={56}
-        className='lg:w-80 sm:w-48 hidden dark:block'        
+        className="lg:w-80 sm:w-48 hidden dark:block"
       />
     </Link>
-  )
-}
+  );
+};
 
-export default Logo
+export default Logo;

@@ -37,9 +37,9 @@ export default function Chords() {
         setActiveSong(song);
     }
 
-    const fastUrl = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/drive/${process.env.NEXT_PUBLIC_FAST_SONG_SHEET_ID}`;
-    const slowUrl = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/drive/${process.env.NEXT_PUBLIC_SLOW_SONG_SHEET_ID}`;
-    const conferenceUrl = `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/drive/${process.env.NEXT_PUBLIC_CONFERENCE_SONG_SHEET_ID}`;
+    const fastUrl = `${API_URL}/drive/${FAST_SONG_SHEET_ID}`;
+    const slowUrl = `${API_URL}/drive/${SLOW_SONG_SHEET_ID}`;
+    const conferenceUrl = `${API_URL}/drive/${CONFERENCE_SONG_SHEET_ID}`;
 
     const fetchSongs = async (
         category: "fast" | "slow" | "conference",
