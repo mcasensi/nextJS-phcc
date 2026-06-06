@@ -117,7 +117,7 @@ export default function One80Jam() {
                 </div>
 
                 <div className="border border-gray-300 shadow-sm mt-5 rounded-lg overflow-hidden max-w-sm mx-auto mb-6">
-                    <div className="max-h-40 overflow-y-auto">
+                    <div className="h-62 overflow-y-auto">
                         <table className="w-full text-sm leading-5">
                             <thead className="bg-gray-100 sticky top-0 z-10">
                                 <tr>
@@ -171,22 +171,7 @@ export default function One80Jam() {
                     <h1 className="text-4xl text-white font-bold mb-8">
                         {activeSong?.song_title}
                     </h1>
-                    <div
-                        className="items-center gap-3 bg-white dark:bg-darklight p-2 rounded-lg w-max mx-auto mb-4"
-                        hidden={!activeSong}
-                    >
-                        <button
-                            onClick={() =>
-                                window.open(
-                                    `${process.env.NEXT_PUBLIC_WEB_API_URL}/one80jam/${activeSong?.slug}`,
-                                    "_blank",
-                                )
-                            }
-                            className="text-sm text-blue-500 underline inline-block p-4 dark:bg-darklight px-2 py-1 rounded-lg"
-                        >
-                            Open in New Tab
-                        </button>
-                    </div>
+
                     <div className="container justify-content-center text-center">
                         <pre className="text-stone-800 whitespace-pre-wrap bg-gray-100 p-4 rounded">
                             {activeSong?.lyrics}

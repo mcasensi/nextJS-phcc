@@ -51,23 +51,6 @@ export default function FindAChurch() {
                             </div>
                         </div>
                     </div>
-                    {/* floting images */}
-                    <div className="absolute top-16 -left-10  dark:opacity-10">
-                        <Image
-                            src={"/images/banner/pattern1.svg"}
-                            alt="ptrn1"
-                            width={141}
-                            height={141}
-                        />
-                    </div>
-                    <div className="absolute bottom-0 left-[53%] dark:opacity-10 z-10">
-                        <Image
-                            src={"/images/banner/pattern2.svg"}
-                            alt="ptrn1"
-                            width={141}
-                            height={141}
-                        />
-                    </div>
                 </div>
             </div>
         </section>
