@@ -25,7 +25,10 @@ export default function One80Jam() {
     const fetchSongs = () => {
         fetch(`${API_URL}/public-one80jam/song_genres?skip=0&limit=100`)
             .then((response) => response.json())
-            .then((data: one80JamSong[]) => setAllSong(data));
+            .then((data: one80JamSong[]) => {
+                setAllSong(data);
+                setAllFilteredSong(data); // <-- add this line
+            });
     };
 
     const getSongByGenre = (genreId: number) => {
@@ -57,6 +60,31 @@ export default function One80Jam() {
             setGenreId(id);
             getSongByGenre(id);
         }
+    };
+
+    const downloadPDF = (id: number) => {
+        console.log("Downloading PDF for song ID:", id);
+        fetch(`${API_URL}/public-one80jam/download-pdf/${id}`, {
+            method: "GET",
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to download PDF");
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `${id}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) => {
+                console.error("Error downloading PDF:", error);
+            });
     };
 
     return (
@@ -136,10 +164,7 @@ export default function One80Jam() {
                             </thead>
 
                             <tbody>
-                                {(Array.isArray(filteredSongs)
-                                    ? filteredSongs
-                                    : []
-                                ).map((song) => (
+                                {filteredSongs.map((song) => (
                                     <tr
                                         key={song.id}
                                         className={`cursor-pointer ${
@@ -172,6 +197,27 @@ export default function One80Jam() {
                         {activeSong?.song_title}
                     </h1>
 
+                    <button
+                        className="bg-red-700 hover:bg-red-800 text-white mb-5 font-bold py-2 px-2 rounded"
+                        onClick={() => downloadPDF(activeSong!.id)}
+                    >
+                        <div className="flex items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="h-10 w-10 text-red-600"
+                            >
+                                <path d="M6 2h7l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+                                <path
+                                    d="M13 2v6h6"
+                                    fill="white"
+                                    opacity="0.5"
+                                />
+                            </svg>
+                            Export PDF
+                        </div>
+                    </button>
                     <div className="container justify-content-center text-center">
                         <pre className="text-stone-800 whitespace-pre-wrap bg-gray-100 p-4 rounded">
                             {activeSong?.lyrics}
