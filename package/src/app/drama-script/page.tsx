@@ -1,46 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const dramaScripts = [
-    {
-        filePath: "/scripts/drama1.pdf",
-        video_reference: "https://youtube.com/watch?v=example1",
-        genre: "Tragedy",
-    },
-    {
-        filePath: "/scripts/drama2.pdf",
-        video_reference: "https://youtube.com/watch?v=example2",
-        genre: "Comedy",
-    },
-    {
-        filePath: "/scripts/drama3.pdf",
-        video_reference: "https://youtube.com/watch?v=example3",
-        genre: "Romance",
-    },
-    {
-        filePath: "/scripts/drama4.pdf",
-        video_reference: "https://youtube.com/watch?v=example4",
-        genre: "Tragedy",
-    },
-];
-
-const genres = [
-    "All",
-    ...Array.from(new Set(dramaScripts.map((s) => s.genre))),
-];
+type DramaScript = {
+    filePath: string;
+    video_reference: string;
+    genre: string;
+};
 
 export default function DramaScriptPage() {
+    const [dramaScripts, setDramaScripts] = useState<DramaScript[]>([]);
     const [search, setSearch] = useState("");
     const [selectedGenre, setSelectedGenre] = useState("All");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDramaScripts = async () => {
+            try {
+                const baseUrl = process.env.NEXT_PUBLIC_ADMIN_API_URL;
+                if (!baseUrl)
+                    throw new Error("Missing NEXT_PUBLIC_ADMIN_API_URL");
+
+                const res = await fetch(
+                    `${baseUrl}/public-drama/drama-scripts`,
+                    {
+                        cache: "no-store",
+                    },
+                );
+                if (!res.ok) throw new Error("Failed to fetch drama scripts");
+
+                const json = await res.json();
+                const list = Array.isArray(json) ? json : (json?.data ?? []);
+
+                const normalized: DramaScript[] = list.map((item: any) => ({
+                    filePath:
+                        item.filePath ?? item.file_path ?? item.pdf_path ?? "",
+                    video_reference:
+                        item.video_reference ?? item.videoReference ?? "",
+                    genre: item.genre ?? "Unknown",
+                }));
+
+                setDramaScripts(normalized);
+            } catch (error) {
+                console.error(error);
+                setDramaScripts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDramaScripts();
+    }, []);
+
+    const genres = useMemo(
+        () => ["All", ...Array.from(new Set(dramaScripts.map((s) => s.genre)))],
+        [dramaScripts],
+    );
 
     const filtered = dramaScripts.filter((script) => {
+        const q = search.toLowerCase();
         const matchesSearch =
-            script.filePath.toLowerCase().includes(search.toLowerCase()) ||
-            script.video_reference
-                .toLowerCase()
-                .includes(search.toLowerCase()) ||
-            script.genre.toLowerCase().includes(search.toLowerCase());
+            script.filePath.toLowerCase().includes(q) ||
+            script.video_reference.toLowerCase().includes(q) ||
+            script.genre.toLowerCase().includes(q);
 
         const matchesGenre =
             selectedGenre === "All" || script.genre === selectedGenre;
@@ -105,7 +127,16 @@ export default function DramaScriptPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filtered.length > 0 ? (
+                        {loading ? (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="px-4 py-6 text-center text-gray-400"
+                                >
+                                    Loading...
+                                </td>
+                            </tr>
+                        ) : filtered.length > 0 ? (
                             filtered.map((script, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="px-4 py-2 border-b border-gray-200">
