@@ -55,7 +55,7 @@ const NavLinkData: NavLinkType[] = [
                 href: "/sunday-school",
             },
             {
-                label: "Drama",
+                label: "Drama Scripts",
                 href: "/drama-script",
             },
             {

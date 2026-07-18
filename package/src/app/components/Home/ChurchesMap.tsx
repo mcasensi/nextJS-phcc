@@ -34,15 +34,15 @@ const churches = [
     },
     {
         id: 6,
-        name: "PHCC Cagayan de Oro",
-        city: "Cagayan de Oro",
+        name: "PHCC Tacloban",
+        city: "Tacloban City",
         lat: 8.4542,
         lng: 124.6319,
     },
     {
         id: 7,
-        name: "PHCC Zamboanga",
-        city: "Zamboanga City",
+        name: "PHCC Lucena",
+        city: "Lucena City",
         lat: 6.9214,
         lng: 122.079,
     },
@@ -70,13 +70,13 @@ export default function ChurchesMap() {
                 <div className="flex justify-center gap-10">
                     <div className="text-center">
                         <span className="text-5xl font-extrabold text-blue-700">
-                            {churches.length}+
+                            300+
                         </span>
                         <p className="text-gray-500 text-sm mt-1">Churches</p>
                     </div>
                     <div className="text-center">
                         <span className="text-5xl font-extrabold text-blue-700">
-                            7
+                            18
                         </span>
                         <p className="text-gray-500 text-sm mt-1">Regions</p>
                     </div>
