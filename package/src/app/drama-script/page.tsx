@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useState,
+    type ChangeEvent,
+    type FormEvent,
+} from "react";
 
 type DramaScript = {
     title: string;
@@ -18,7 +24,7 @@ export default function DramaScriptPage() {
     const [requestForm, setRequestForm] = useState({
         title: "",
         video_reference_link: "",
-        sffx_link: "",
+        sfx_link: "",
         genres: "",
         download_link: "",
     });
@@ -49,7 +55,7 @@ export default function DramaScriptPage() {
                     video_reference:
                         item.video_reference ?? item.videoReference ?? "",
                     sfx: item.sfx ?? item.sound_effects ?? "",
-                    title: item.title ?? null,
+                    title: item.title ?? "",
                     genres: item.genres ?? item.genre ?? [],
                 }));
 
@@ -76,6 +82,7 @@ export default function DramaScriptPage() {
     const filtered = dramaScripts.filter((script) => {
         const q = search.toLowerCase();
         const matchesSearch =
+            script.title.toLowerCase().includes(q) ||
             script.filePath.toLowerCase().includes(q) ||
             script.video_reference.toLowerCase().includes(q) ||
             script.genres.some((g) => g.toLowerCase().includes(q));
@@ -87,7 +94,7 @@ export default function DramaScriptPage() {
     });
 
     const handleRequestChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
         setRequestForm((prev) => ({
             ...prev,
@@ -95,7 +102,7 @@ export default function DramaScriptPage() {
         }));
     };
 
-    const handleRequestSubmit = async (e: React.FormEvent) => {
+    const handleRequestSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setRequestLoading(true);
         setRequestMsg("");
@@ -111,11 +118,11 @@ export default function DramaScriptPage() {
             if (!res.ok)
                 throw new Error(data?.error || "Failed to submit request");
 
-            setRequestMsg("Request sent to Discord channel.");
+            setRequestMsg("Request sent successfully!");
             setRequestForm({
                 title: "",
                 video_reference_link: "",
-                sffx_link: "",
+                sfx_link: "",
                 genres: "",
                 download_link: "",
             });
@@ -127,130 +134,168 @@ export default function DramaScriptPage() {
     };
 
     return (
-        <div className="p-6 mt-25">
-            <h1 className="text-2xl font-bold mb-4">Drama Scripts</h1>
-            {/* Search and Filter */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <select
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                    {genres.map((genre) => (
-                        <option key={genre} value={genre}>
-                            {genre}
-                        </option>
-                    ))}
-                </select>
-                {(search || selectedGenre !== "All") && (
-                    <button
-                        onClick={() => {
-                            setSearch("");
-                            setSelectedGenre("All");
-                        }}
-                        className="text-sm text-gray-500 hover:text-red-500 underline"
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 mt-20">
+            {/* Header */}
+            <section className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-6 sm:p-8 shadow-sm">
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+                    Drama Scripts
+                </h1>
+                <p className="mt-2 text-slate-600">
+                    Browse, filter, and download scripts for church productions.
+                </p>
+            </section>
+
+            {/* Filters */}
+            <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                    <input
+                        type="text"
+                        placeholder="Search by title, reference, or genre..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full sm:max-w-md rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <select
+                        value={selectedGenre}
+                        onChange={(e) => setSelectedGenre(e.target.value)}
+                        className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        Clear filters
-                    </button>
-                )}
-            </div>
+                        {genres.map((genre) => (
+                            <option key={genre} value={genre}>
+                                {genre}
+                            </option>
+                        ))}
+                    </select>
+
+                    {(search || selectedGenre !== "All") && (
+                        <button
+                            onClick={() => {
+                                setSearch("");
+                                setSelectedGenre("All");
+                            }}
+                            className="text-sm font-medium text-slate-500 hover:text-red-500 underline underline-offset-2"
+                        >
+                            Clear filters
+                        </button>
+                    )}
+                </div>
+            </section>
 
             {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 rounded-lg">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="px-4 py-2 text-left border-b border-gray-300">
-                                Title
-                            </th>
-                            <th className="px-4 py-2 text-left border-b border-gray-300">
-                                Video Reference
-                            </th>
-                            <th className="px-4 py-2 text-left border-b border-gray-300">
-                                SFX
-                            </th>
-                            <th className="px-4 py-2 text-left border-b border-gray-300">
-                                Genres
-                            </th>
-                            <th className="px-4 py-2 text-left border-b border-gray-300">
-                                Download
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
+            <section className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                        <thead className="bg-slate-50 text-slate-700">
                             <tr>
-                                <td
-                                    colSpan={5}
-                                    className="px-4 py-6 text-center text-gray-400"
-                                >
-                                    Loading...
-                                </td>
+                                <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
+                                    Title
+                                </th>
+                                <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
+                                    Video
+                                </th>
+                                <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
+                                    SFX
+                                </th>
+                                <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
+                                    Genres
+                                </th>
+                                <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
+                                    Download
+                                </th>
                             </tr>
-                        ) : filtered.length > 0 ? (
-                            filtered.map((script, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                    <td className="px-4 py-2 border-b border-gray-200">
-                                        {script.title}
-                                    </td>
-                                    <td className="px-4 py-2 border-b border-gray-200">
-                                        <a
-                                            href={script.video_reference}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
-                                        >
-                                            Watch Video
-                                        </a>
-                                    </td>
-                                    <td className="px-4 py-2 border-b border-gray-200">
-                                        <a
-                                            hidden={!script.sfx}
-                                            href={script.sfx}
-                                            target="_blank"
-                                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
-                                        >
-                                            View Soundboard
-                                        </a>
-                                    </td>
-                                    <td className="px-4 py-2 border-b border-gray-200">
-                                        {script.genres.join(", ")}
-                                    </td>
-                                    <td className="px-4 py-2 border-b border-gray-200">
-                                        <a
-                                            hidden={!script.filePath}
-                                            href={script.filePath}
-                                            download
-                                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
-                                        >
-                                            Download Script
-                                        </a>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {loading ? (
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className="px-4 py-10 text-center text-slate-400"
+                                    >
+                                        Loading scripts...
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td
-                                    colSpan={5}
-                                    className="px-4 py-6 text-center text-gray-400"
-                                >
-                                    No results found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-                <p className="text-sm text-gray-400 mt-2">
+                            ) : filtered.length > 0 ? (
+                                filtered.map((script, index) => (
+                                    <tr
+                                        key={index}
+                                        className="hover:bg-slate-50/70 transition-colors"
+                                    >
+                                        <td className="px-4 py-3 font-medium text-slate-800">
+                                            {script.title || "Untitled"}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {script.video_reference ? (
+                                                <a
+                                                    href={
+                                                        script.video_reference
+                                                    }
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                                                >
+                                                    Watch Video
+                                                </a>
+                                            ) : (
+                                                <span className="text-slate-400">
+                                                    N/A
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {script.sfx ? (
+                                                <a
+                                                    href={script.sfx}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                                                >
+                                                    View Soundboard
+                                                </a>
+                                            ) : (
+                                                <span className="text-slate-400">
+                                                    N/A
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-3 text-slate-700">
+                                            {script.genres.length
+                                                ? script.genres.join(", ")
+                                                : "Uncategorized"}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {script.filePath ? (
+                                                <a
+                                                    href={script.filePath}
+                                                    download
+                                                    className="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                                                >
+                                                    Download Script
+                                                </a>
+                                            ) : (
+                                                <span className="text-slate-400">
+                                                    N/A
+                                                </span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className="px-4 py-10 text-center text-slate-400"
+                                    >
+                                        No results found.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="border-t border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-500">
                     {filtered.length} result(s) found
-                </p>
-            </div>
+                </div>
+            </section>
 
             {/* Request Entry Form */}
             <section className="mt-10 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -276,7 +321,7 @@ export default function DramaScriptPage() {
                             value={requestForm.title}
                             onChange={handleRequestChange}
                             placeholder="Enter title"
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -290,21 +335,21 @@ export default function DramaScriptPage() {
                             value={requestForm.video_reference_link}
                             onChange={handleRequestChange}
                             placeholder="https://..."
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">
-                            SFFX Link
+                            SFX Link
                         </label>
                         <input
-                            name="sffx_link"
-                            value={requestForm.sffx_link}
+                            name="sfx_link"
+                            value={requestForm.sfx_link}
                             onChange={handleRequestChange}
                             placeholder="https://..."
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -318,7 +363,7 @@ export default function DramaScriptPage() {
                             value={requestForm.genres}
                             onChange={handleRequestChange}
                             placeholder="Drama, Youth, Christmas"
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -332,7 +377,7 @@ export default function DramaScriptPage() {
                             value={requestForm.download_link}
                             onChange={handleRequestChange}
                             placeholder="https://..."
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -341,7 +386,7 @@ export default function DramaScriptPage() {
                         <button
                             type="submit"
                             disabled={requestLoading}
-                            className="inline-flex items-center justify-center bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
                         >
                             {requestLoading
                                 ? "Submitting..."

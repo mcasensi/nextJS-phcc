@@ -205,7 +205,7 @@ export default function Page() {
                                             className="block truncate text-sm text-blue-600 hover:underline"
                                             title={book.pdfUrl}
                                         >
-                                            {book.pdfUrl}
+                                            View PDF
                                         </a>
 
                                         <div className="flex flex-wrap gap-2">
@@ -318,15 +318,20 @@ export default function Page() {
                                                 {book.title}
                                             </td>
                                             <td className="px-4 py-3 max-w-[320px]">
-                                                <a
-                                                    href={book.pdfUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="block truncate text-blue-600 hover:text-blue-700 hover:underline"
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        window.open(
+                                                            book.pdfUrl,
+                                                            "_blank",
+                                                            "noopener,noreferrer",
+                                                        )
+                                                    }
+                                                    className="inline-flex items-center rounded-lg bg-red-600 px-3 py-1.5 text-white hover:bg-red-700 transition"
                                                     title={book.pdfUrl}
                                                 >
-                                                    {book.pdfUrl}
-                                                </a>
+                                                    View PDF
+                                                </button>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div className="flex flex-wrap gap-2">

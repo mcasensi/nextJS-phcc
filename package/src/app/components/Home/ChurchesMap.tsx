@@ -87,7 +87,27 @@ export default function ChurchesMap() {
                         <p className="text-gray-500 text-sm mt-1">Members</p>
                     </div>
                 </div>
+
+                <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <a
+                        href="https://pottershousephils.com/find-a-church"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition-colors"
+                    >
+                        Across Philippines
+                    </a>
+                    <a
+                        href="https://cfmmap.org/v3/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-black transition-colors"
+                    >
+                        Across the World
+                    </a>
+                </div>
             </div>
+
             <MapComponent churches={churches} />
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
                 {churches.map((church) => (
