@@ -3,18 +3,13 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const {
-            title,
-            video_reference_link,
-            sffx_link,
-            genres,
-            download_link,
-        } = body ?? {};
+        const { title, video_reference_link, sfx_link, genres, download_link } =
+            body ?? {};
 
         if (
             !title ||
             !video_reference_link ||
-            !sffx_link ||
+            !sfx_link ||
             !genres ||
             !download_link
         ) {
@@ -43,7 +38,7 @@ export async function POST(req: Request) {
                             name: "Video Reference Link",
                             value: String(video_reference_link),
                         },
-                        { name: "SFFX Link", value: String(sffx_link) },
+                        { name: "SFX Link", value: String(sfx_link) },
                         { name: "Genres", value: String(genres) },
                         { name: "Download Link", value: String(download_link) },
                     ],
