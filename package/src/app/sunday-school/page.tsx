@@ -12,7 +12,7 @@ const resources = [
         title: "Curriculum",
         description:
             "Age-appropriate lesson plans and teaching outlines for all age groups.",
-        link: "https://pottershousephils.com/sunday-school/curriculum",
+        link: "https://pottershousephils.com/curriculum",
         buttonLabel: "View Curriculum",
         color: "bg-blue-50 border-blue-200",
     },
@@ -20,7 +20,7 @@ const resources = [
         title: "VBS",
         description:
             "Vacation Bible School guides, activities, themes, and program resources.",
-        link: "https://pottershousephils.com/sunday-school/vbs",
+        link: "https://pottershousephils.com/curriculum/vbs",
         buttonLabel: "View VBS",
         color: "bg-emerald-50 border-emerald-200",
     },
