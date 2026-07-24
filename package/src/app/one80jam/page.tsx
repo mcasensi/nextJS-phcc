@@ -15,6 +15,14 @@ export default function One80Jam() {
     const [genreId, setGenreId] = useState<number | 0>(0);
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [newSong, setNewSong] = useState({
+        song_title: "",
+        lyrics: "",
+        genre_ids: [] as number[],
+    });
+
     useEffect(() => {
         fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
@@ -27,8 +35,47 @@ export default function One80Jam() {
             .then((response) => response.json())
             .then((data: one80JamSong[]) => {
                 setAllSong(data);
-                setAllFilteredSong(data); // <-- add this line
+                setAllFilteredSong(data);
             });
+    };
+
+    const toggleGenre = (id: number) => {
+        setNewSong((prev) => ({
+            ...prev,
+            genre_ids: prev.genre_ids.includes(id)
+                ? prev.genre_ids.filter((g) => g !== id)
+                : [...prev.genre_ids, id],
+        }));
+    };
+
+    const handleAddEntry = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch(
+                `${API_URL}/public-one80jam/song_genres`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        song_title: newSong.song_title,
+                        lyrics: newSong.lyrics,
+                        genre_id: newSong.genre_ids, // multiple genre IDs
+                    }),
+                },
+            );
+
+            if (!response.ok) throw new Error("Failed to add entry");
+
+            setNewSong({ song_title: "", lyrics: "", genre_ids: [] });
+            setShowAddForm(false);
+            fetchSongs();
+        } catch (error) {
+            console.error("Error adding entry:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const getSongByGenre = (genreId: number) => {
@@ -41,7 +88,6 @@ export default function One80Jam() {
         );
     };
 
-    /* Filter first */
     const filteredSongs = useMemo(() => {
         return value
             ? allFilteredSong.filter((song) =>
@@ -98,6 +144,7 @@ export default function One80Jam() {
                     available and other genres. Ideas and themes by using tags
                     below.
                 </p>
+
                 <div className="grid justify-items-center">
                     <div className="bg-white rounded-lg overflow-hidden px-2 py-2 w-1/2">
                         <input
@@ -110,7 +157,92 @@ export default function One80Jam() {
                             placeholder="Search Title of the Song"
                         />
                     </div>
-                    {allGenres && (
+
+                    <div className="pt-3">
+                        <button
+                            type="button"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded"
+                            onClick={() => setShowAddForm((prev) => !prev)}
+                        >
+                            {showAddForm ? "Close Form" : "Add New Entry"}
+                        </button>
+                    </div>
+
+                    {showAddForm && (
+                        <form
+                            onSubmit={handleAddEntry}
+                            className="w-full max-w-xl mt-4 bg-white text-stone-900 p-4 rounded-lg shadow"
+                        >
+                            <div className="mb-4 border-b border-stone-200 pb-3">
+                                <h2 className="text-xl font-bold text-stone-900">
+                                    Add New Song Entry
+                                </h2>
+                                <p className="text-sm text-stone-600">
+                                    Fill in the details below.
+                                </p>
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder="Song title"
+                                value={newSong.song_title}
+                                onChange={(e) =>
+                                    setNewSong((prev) => ({
+                                        ...prev,
+                                        song_title: e.target.value,
+                                    }))
+                                }
+                                className="w-full mb-3 p-2 rounded border border-stone-300 text-black"
+                                required
+                            />
+                            <textarea
+                                placeholder="Lyrics"
+                                value={newSong.lyrics}
+                                onChange={(e) =>
+                                    setNewSong((prev) => ({
+                                        ...prev,
+                                        lyrics: e.target.value,
+                                    }))
+                                }
+                                className="w-full mb-3 p-2 rounded border border-stone-300 text-black min-h-32"
+                                required
+                            />
+                            <div className="mb-3">
+                                <p className="text-sm font-semibold mb-2">
+                                    Genres (select multiple)
+                                </p>
+                                <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto border border-stone-300 rounded p-2">
+                                    {allGenres.map((genre) => (
+                                        <label
+                                            key={genre.id}
+                                            className="flex items-center gap-2 text-sm"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={newSong.genre_ids.includes(
+                                                    genre.id,
+                                                )}
+                                                onChange={() =>
+                                                    toggleGenre(genre.id)
+                                                }
+                                            />
+                                            <span>{genre.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white py-2 px-4 rounded"
+                            >
+                                {isSubmitting ? "Saving..." : "Save Entry"}
+                            </button>
+                        </form>
+                    )}
+
+                    {!showAddForm && allGenres && (
                         <div className="flex flex-wrap justify-center items-center pt-2">
                             <div>
                                 <div className="p-2">
