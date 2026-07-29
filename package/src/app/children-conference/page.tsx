@@ -57,6 +57,7 @@ export default function ChildrenConferencePage() {
     const [messageType, setMessageType] = useState<"success" | "error" | "">(
         "",
     );
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const addParticipant = () => {
         setParticipants((prev) => [
@@ -123,6 +124,7 @@ export default function ChildrenConferencePage() {
 
             setMessage("Submitted successfully.");
             setMessageType("success");
+            setIsSubmitted(true);
             setName("");
             setAge("");
             setChurchCity("");
@@ -139,8 +141,29 @@ export default function ChildrenConferencePage() {
         }
     };
 
+    if (isSubmitted) {
+        return (
+            <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
+                <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
+                    <section className="w-full rounded-3xl border border-emerald-200 bg-white/90 p-6 text-center shadow-sm sm:p-8">
+                        <div className="mb-4 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                            Submitted successfully
+                        </div>
+                        <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
+                            Your registration has been received.
+                        </h1>
+                        <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+                            Thank you for registering for the conference. We
+                            will be in touch soon.
+                        </p>
+                    </section>
+                </div>
+            </main>
+        );
+    }
+
     return (
-        <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
             <div className="mx-auto max-w-5xl">
                 <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
