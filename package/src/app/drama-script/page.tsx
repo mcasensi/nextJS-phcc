@@ -342,13 +342,13 @@ export default function DramaScriptPage() {
 
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">
-                            SFX Link
+                            Music Background
                         </label>
                         <input
                             name="sfx_link"
                             value={requestForm.sfx_link}
                             onChange={handleRequestChange}
-                            placeholder="https://..."
+                            placeholder="https://google_drive_link"
                             className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
@@ -370,13 +370,13 @@ export default function DramaScriptPage() {
 
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Download Link
+                            Script Link
                         </label>
                         <input
                             name="download_link"
                             value={requestForm.download_link}
                             onChange={handleRequestChange}
-                            placeholder="https://..."
+                            placeholder="https://google_drive_link"
                             className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
