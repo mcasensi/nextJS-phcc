@@ -24,6 +24,10 @@ export default function One80Jam() {
     });
 
     useEffect(() => {
+        if (process.env.NEXT_PUBLIC_NEXT_MODE === "development") {
+            setShowAddForm(false);
+        }
+
         fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
@@ -157,16 +161,17 @@ export default function One80Jam() {
                             placeholder="Search Title of the Song"
                         />
                     </div>
-
-                    <div className="pt-3">
-                        <button
-                            type="button"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded"
-                            onClick={() => setShowAddForm((prev) => !prev)}
-                        >
-                            {showAddForm ? "Close Form" : "Add New Entry"}
-                        </button>
-                    </div>
+                    {showAddForm && (
+                        <div className="pt-3">
+                            <button
+                                type="button"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded"
+                                onClick={() => setShowAddForm((prev) => !prev)}
+                            >
+                                {showAddForm ? "Close Form" : "Add New Entry"}
+                            </button>
+                        </div>
+                    )}
 
                     {showAddForm && (
                         <form

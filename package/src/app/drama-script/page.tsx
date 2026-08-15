@@ -30,7 +30,7 @@ export default function DramaScriptPage() {
     });
     const [requestLoading, setRequestLoading] = useState(false);
     const [requestMsg, setRequestMsg] = useState("");
-
+    const [showAddForm, setShowAddForm] = useState(false);
     useEffect(() => {
         const fetchDramaScripts = async () => {
             try {
@@ -69,6 +69,9 @@ export default function DramaScriptPage() {
         };
 
         fetchDramaScripts();
+        if (process.env.NEXT_PUBLIC_NEXT_MODE === "development") {
+            setShowAddForm(false);
+        }
     }, []);
 
     const genres = useMemo(
@@ -297,110 +300,111 @@ export default function DramaScriptPage() {
                 </div>
             </section>
 
-            {/* Request Entry Form */}
-            <section className="mt-10 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
-                    <h2 className="text-xl font-semibold text-white">
-                        Request New Entry
-                    </h2>
-                    <p className="text-blue-100 text-sm mt-1">
-                        Submit a request for a new Drama script entry.
-                    </p>
-                </div>
-
-                <form
-                    onSubmit={handleRequestSubmit}
-                    className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
-                >
-                    <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Title
-                        </label>
-                        <input
-                            name="title"
-                            value={requestForm.title}
-                            onChange={handleRequestChange}
-                            placeholder="Enter title"
-                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
+            {showAddForm && (
+                <section className="mt-10 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
+                        <h2 className="text-xl font-semibold text-white">
+                            Request New Entry
+                        </h2>
+                        <p className="text-blue-100 text-sm mt-1">
+                            Submit a request for a new Drama script entry.
+                        </p>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Video Reference Link
-                        </label>
-                        <input
-                            name="video_reference_link"
-                            value={requestForm.video_reference_link}
-                            onChange={handleRequestChange}
-                            placeholder="https://..."
-                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
+                    <form
+                        onSubmit={handleRequestSubmit}
+                        className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+                    >
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Title
+                            </label>
+                            <input
+                                name="title"
+                                value={requestForm.title}
+                                onChange={handleRequestChange}
+                                placeholder="Enter title"
+                                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Music Background
-                        </label>
-                        <input
-                            name="sfx_link"
-                            value={requestForm.sfx_link}
-                            onChange={handleRequestChange}
-                            placeholder="https://google_drive_link"
-                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Video Reference Link
+                            </label>
+                            <input
+                                name="video_reference_link"
+                                value={requestForm.video_reference_link}
+                                onChange={handleRequestChange}
+                                placeholder="https://..."
+                                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Genres
-                        </label>
-                        <input
-                            name="genres"
-                            value={requestForm.genres}
-                            onChange={handleRequestChange}
-                            placeholder="Drama, Youth, Christmas"
-                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Music Background
+                            </label>
+                            <input
+                                name="sfx_link"
+                                value={requestForm.sfx_link}
+                                onChange={handleRequestChange}
+                                placeholder="https://google_drive_link"
+                                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Script Link
-                        </label>
-                        <input
-                            name="download_link"
-                            value={requestForm.download_link}
-                            onChange={handleRequestChange}
-                            placeholder="https://google_drive_link"
-                            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Genres
+                            </label>
+                            <input
+                                name="genres"
+                                value={requestForm.genres}
+                                onChange={handleRequestChange}
+                                placeholder="Drama, Youth, Christmas"
+                                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
 
-                    <div className="md:col-span-2 flex items-center gap-3 pt-2">
-                        <button
-                            type="submit"
-                            disabled={requestLoading}
-                            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
-                        >
-                            {requestLoading
-                                ? "Submitting..."
-                                : "Submit Request"}
-                        </button>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                Script Link
+                            </label>
+                            <input
+                                name="download_link"
+                                value={requestForm.download_link}
+                                onChange={handleRequestChange}
+                                placeholder="https://google_drive_link"
+                                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
 
-                        {requestMsg ? (
-                            <p className="text-sm text-slate-600">
-                                {requestMsg}
-                            </p>
-                        ) : null}
-                    </div>
-                </form>
-            </section>
+                        <div className="md:col-span-2 flex items-center gap-3 pt-2">
+                            <button
+                                type="submit"
+                                disabled={requestLoading}
+                                className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                            >
+                                {requestLoading
+                                    ? "Submitting..."
+                                    : "Submit Request"}
+                            </button>
+
+                            {requestMsg ? (
+                                <p className="text-sm text-slate-600">
+                                    {requestMsg}
+                                </p>
+                            ) : null}
+                        </div>
+                    </form>
+                </section>
+            )}
         </div>
     );
 }
