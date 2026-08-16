@@ -16,10 +16,13 @@ export default function One80Jam() {
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
 
     const [showAddForm, setShowAddForm] = useState(false);
+    const [requestMessage, setRequestMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [newSong, setNewSong] = useState({
         song_title: "",
         lyrics: "",
+        user_name: "",
+        church_city: "",
         genre_ids: [] as number[],
     });
 
@@ -56,28 +59,64 @@ export default function One80Jam() {
     const handleAddEntry = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setRequestMessage("");
+
+        const submittedTitle = newSong.song_title.trim();
 
         try {
-            const response = await fetch(
-                `${API_URL}/public-one80jam/song_genres`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        song_title: newSong.song_title,
-                        lyrics: newSong.lyrics,
-                        genre_id: newSong.genre_ids, // multiple genre IDs
-                    }),
+            const payload = {
+                song_title: submittedTitle,
+                lyrics: newSong.lyrics.trim(),
+                user_name: newSong.user_name.trim(),
+                church_city: newSong.church_city.trim(),
+                genre_id: newSong.genre_ids,
+            };
+
+            const endpoint = `${API_URL}/public-one80jam/song_genres`;
+
+            console.log("POST endpoint:", endpoint);
+            console.log("POST payload:", payload);
+
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
                 },
+                body: JSON.stringify(payload),
+            });
+
+            const responseText = await response.text();
+
+            if (!response.ok) {
+                throw new Error(
+                    `API error ${response.status}: ${responseText}`,
+                );
+            }
+
+            setValue(submittedTitle);
+            setRequestMessage(
+                `Thank you ${newSong.user_name.trim()}. Song "${submittedTitle}" was added successfully.`,
             );
 
-            if (!response.ok) throw new Error("Failed to add entry");
+            setNewSong({
+                song_title: "",
+                lyrics: "",
+                user_name: "",
+                church_city: "",
+                genre_ids: [],
+            });
 
-            setNewSong({ song_title: "", lyrics: "", genre_ids: [] });
             setShowAddForm(false);
             fetchSongs();
         } catch (error) {
-            console.error("Error adding entry:", error);
+            console.error("handleAddEntry failed:", error);
+
+            setRequestMessage(
+                error instanceof TypeError
+                    ? "Unable to connect to the API. Check that the backend is running and CORS is configured."
+                    : "Unable to add the song. Please try again.",
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -153,15 +192,26 @@ export default function One80Jam() {
                 <div className="grid justify-items-center">
                     <div className="bg-white rounded-lg overflow-hidden px-2 py-2 w-1/2">
                         <input
-                            className="text-stone-400 outline-none w-1/2"
+                            className="text-stone-400 outline-none w-full"
                             type="text"
-                            onChange={(event) => {
-                                setValue(event.target.value);
-                            }}
+                            onChange={(event) => setValue(event.target.value)}
                             value={value}
                             placeholder="Search Title of the Song"
                         />
                     </div>
+
+                    {requestMessage && (
+                        <p
+                            className={`mt-3 rounded-lg px-4 py-2 text-center text-sm font-medium ${
+                                requestMessage.startsWith("Thank you")
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-red-100 text-red-800"
+                            }`}
+                        >
+                            {requestMessage}
+                        </p>
+                    )}
+
                     {formMode !== "development" && (
                         <button
                             type="button"
@@ -235,6 +285,34 @@ export default function One80Jam() {
                                     ))}
                                 </div>
                             </div>
+
+                            <input
+                                type="text"
+                                placeholder="Full name of the person adding the song"
+                                value={newSong.user_name}
+                                onChange={(e) =>
+                                    setNewSong((prev) => ({
+                                        ...prev,
+                                        user_name: e.target.value,
+                                    }))
+                                }
+                                className="mb-3 w-full rounded border border-stone-300 p-2 text-black"
+                                required
+                            />
+
+                            <input
+                                type="text"
+                                placeholder="Church city"
+                                value={newSong.church_city}
+                                onChange={(e) =>
+                                    setNewSong((prev) => ({
+                                        ...prev,
+                                        church_city: e.target.value,
+                                    }))
+                                }
+                                className="mb-3 w-full rounded border border-stone-300 p-2 text-black"
+                                required
+                            />
 
                             <button
                                 type="submit"
