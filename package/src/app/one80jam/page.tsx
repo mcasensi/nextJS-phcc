@@ -1,11 +1,11 @@
 "use client";
+
 import { useState, useEffect, useMemo } from "react";
 import { one80JamGenre } from "../types/one80JamGenre";
 import { one80JamSong } from "../types/one80JamSong";
-import { get } from "http";
-import { API_URL, WEB_API_URL } from "@/lib/config";
-import { scroller, Element } from "react-scroll";
-import process from "process";
+import { API_URL } from "@/lib/config";
+
+const formMode = process.env.NEXT_PUBLIC_NEXT_MODE ?? "production";
 
 export default function One80Jam() {
     const [value, setValue] = useState("");
@@ -24,13 +24,14 @@ export default function One80Jam() {
     });
 
     useEffect(() => {
-        if (process.env.NEXT_PUBLIC_NEXT_MODE === "development") {
+        if (formMode === "development") {
             setShowAddForm(false);
         }
 
         fetch(`${API_URL}/public-one80jam/genres?skip=0&limit=100`)
             .then((response) => response.json())
             .then((data) => setAllGenres(data));
+
         fetchSongs();
     }, []);
 
@@ -161,22 +162,20 @@ export default function One80Jam() {
                             placeholder="Search Title of the Song"
                         />
                     </div>
-                    {showAddForm && (
-                        <div className="pt-3">
-                            <button
-                                type="button"
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded"
-                                onClick={() => setShowAddForm((prev) => !prev)}
-                            >
-                                {showAddForm ? "Close Form" : "Add New Entry"}
-                            </button>
-                        </div>
+                    {formMode !== "development" && (
+                        <button
+                            type="button"
+                            className="bg-emerald-600 hover:bg-emerald-700 rounded px-4 py-2 font-semibold text-white"
+                            onClick={() => setShowAddForm((prev) => !prev)}
+                        >
+                            {showAddForm ? "Close Form" : "Add New Entry"}
+                        </button>
                     )}
 
-                    {showAddForm && (
+                    {formMode !== "development" && showAddForm && (
                         <form
                             onSubmit={handleAddEntry}
-                            className="w-full max-w-xl mt-4 bg-white text-stone-900 p-4 rounded-lg shadow"
+                            className="w-full max-w-xl mt-4 rounded-lg bg-white p-4 text-stone-900 shadow"
                         >
                             <div className="mb-4 border-b border-stone-200 pb-3">
                                 <h2 className="text-xl font-bold text-stone-900">

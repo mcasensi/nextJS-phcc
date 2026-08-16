@@ -15,6 +15,8 @@ type DramaScript = {
     sfx: string;
     genres: string[];
 };
+const formMode = process.env.NEXT_PUBLIC_NEXT_MODE ?? "production";
+const canShowAddForm = formMode !== "development";
 
 export default function DramaScriptPage() {
     const [dramaScripts, setDramaScripts] = useState<DramaScript[]>([]);
@@ -31,6 +33,7 @@ export default function DramaScriptPage() {
     const [requestLoading, setRequestLoading] = useState(false);
     const [requestMsg, setRequestMsg] = useState("");
     const [showAddForm, setShowAddForm] = useState(false);
+
     useEffect(() => {
         const fetchDramaScripts = async () => {
             try {
@@ -69,9 +72,6 @@ export default function DramaScriptPage() {
         };
 
         fetchDramaScripts();
-        if (process.env.NEXT_PUBLIC_NEXT_MODE === "development") {
-            setShowAddForm(false);
-        }
     }, []);
 
     const genres = useMemo(
@@ -300,7 +300,7 @@ export default function DramaScriptPage() {
                 </div>
             </section>
 
-            {showAddForm && (
+            {canShowAddForm && (
                 <section className="mt-10 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                     <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
                         <h2 className="text-xl font-semibold text-white">
