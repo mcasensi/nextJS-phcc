@@ -14,6 +14,7 @@ export default function One80Jam() {
     const [allFilteredSong, setAllFilteredSong] = useState<one80JamSong[]>([]);
     const [genreId, setGenreId] = useState<number | 0>(0);
     const [activeSong, setActiveSong] = useState<one80JamSong | null>(null);
+    const [copied, setCopied] = useState(false);
 
     const [showAddForm, setShowAddForm] = useState(false);
     const [requestMessage, setRequestMessage] = useState("");
@@ -175,6 +176,17 @@ export default function One80Jam() {
             .catch((error) => {
                 console.error("Error downloading PDF:", error);
             });
+    };
+
+    const handleCopyLyrics = async () => {
+        if (!activeSong?.lyrics) return;
+        try {
+            await navigator.clipboard.writeText(activeSong.lyrics);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+        } catch (error) {
+            console.error("Copy failed:", error);
+        }
     };
 
     return (
@@ -432,7 +444,28 @@ export default function One80Jam() {
                             Export PDF
                         </div>
                     </button>
+
                     <div className="container justify-content-center text-center">
+                        <div className="flex justify-end mb-2">
+                            <button
+                                type="button"
+                                onClick={handleCopyLyrics}
+                                className="inline-flex items-center gap-2 bg-stone-700 hover:bg-stone-800 text-white text-sm px-3 py-2 rounded"
+                                disabled={!activeSong?.lyrics}
+                                title="Copy lyrics"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="w-4 h-4"
+                                >
+                                    <path d="M7.5 3A1.5 1.5 0 0 0 6 4.5v11A1.5 1.5 0 0 0 7.5 17H9v1.5A2.5 2.5 0 0 0 11.5 21h7A2.5 2.5 0 0 0 21 18.5v-9A2.5 2.5 0 0 0 18.5 7H17V5.5A2.5 2.5 0 0 0 14.5 3h-7Z" />
+                                </svg>
+                                {copied ? "Copied" : "Copy"}
+                            </button>
+                        </div>
+
                         <pre className="text-stone-800 whitespace-pre-wrap bg-gray-100 p-4 rounded">
                             {activeSong?.lyrics}
                         </pre>
