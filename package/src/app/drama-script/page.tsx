@@ -15,6 +15,8 @@ type DramaScript = {
     sfx: string;
     genres: string[];
 };
+
+const PAGE_SIZE = 10;
 const formMode = process.env.NEXT_PUBLIC_NEXT_MODE ?? "production";
 const canShowAddForm = formMode !== "development";
 
@@ -23,6 +25,7 @@ export default function DramaScriptPage() {
     const [search, setSearch] = useState("");
     const [selectedGenre, setSelectedGenre] = useState("All");
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
     const [requestForm, setRequestForm] = useState({
         title: "",
         video_reference_link: "",
@@ -95,6 +98,20 @@ export default function DramaScriptPage() {
 
         return matchesSearch && matchesGenre;
     });
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const paginated = filtered.slice(startIndex, startIndex + PAGE_SIZE);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, selectedGenre]);
+
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+        }
+    }, [currentPage, totalPages]);
 
     const handleRequestChange = (
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -197,13 +214,13 @@ export default function DramaScriptPage() {
                                     Video
                                 </th>
                                 <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
-                                    SFX
+                                    Script
                                 </th>
                                 <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
                                     Genres
                                 </th>
                                 <th className="px-4 py-3 text-left font-semibold border-b border-slate-200">
-                                    Download
+                                    SFX
                                 </th>
                             </tr>
                         </thead>
@@ -218,9 +235,9 @@ export default function DramaScriptPage() {
                                     </td>
                                 </tr>
                             ) : filtered.length > 0 ? (
-                                filtered.map((script, index) => (
+                                paginated.map((script, index) => (
                                     <tr
-                                        key={index}
+                                        key={`${script.filePath || script.title}-${startIndex + index}`}
                                         className="hover:bg-slate-50/70 transition-colors"
                                     >
                                         <td className="px-4 py-3 font-medium text-slate-800">
@@ -245,14 +262,13 @@ export default function DramaScriptPage() {
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
-                                            {script.sfx ? (
+                                            {script.filePath ? (
                                                 <a
-                                                    href={script.sfx}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                                                    href={script.filePath}
+                                                    download
+                                                    className="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
                                                 >
-                                                    View Soundboard
+                                                    Download Script
                                                 </a>
                                             ) : (
                                                 <span className="text-slate-400">
@@ -266,13 +282,14 @@ export default function DramaScriptPage() {
                                                 : "Uncategorized"}
                                         </td>
                                         <td className="px-4 py-3">
-                                            {script.filePath ? (
+                                            {script.sfx ? (
                                                 <a
-                                                    href={script.filePath}
-                                                    download
-                                                    className="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+                                                    href={script.sfx}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
                                                 >
-                                                    Download Script
+                                                    View Soundboard
                                                 </a>
                                             ) : (
                                                 <span className="text-slate-400">
@@ -295,8 +312,39 @@ export default function DramaScriptPage() {
                         </tbody>
                     </table>
                 </div>
-                <div className="border-t border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-500">
-                    {filtered.length} result(s) found
+
+                <div className="border-t border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-500 flex items-center justify-between gap-3">
+                    <span>{filtered.length} result(s) found</span>
+
+                    {filtered.length > 0 && (
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setCurrentPage((p) => Math.max(1, p - 1))
+                                }
+                                disabled={currentPage === 1}
+                                className="rounded-md border border-slate-300 px-2 py-1 disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+                            <span>
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setCurrentPage((p) =>
+                                        Math.min(totalPages, p + 1),
+                                    )
+                                }
+                                disabled={currentPage === totalPages}
+                                className="rounded-md border border-slate-300 px-2 py-1 disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
 
