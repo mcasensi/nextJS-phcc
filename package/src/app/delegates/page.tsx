@@ -11,7 +11,7 @@ type Attendee = {
 };
 
 export default function Directory() {
-    const SUBMIT_DISABLED = true;
+    const SUBMIT_DISABLED = false;
 
     const formik = useFormik({
         initialValues: {
@@ -165,6 +165,11 @@ export default function Directory() {
                 "Please go back to your unit in Budget Hotel after Friday morning seminars to check-out.",
                 "Your check-out will be Friday noon or 1pm (latest).",
             ],
+        },
+        {
+            label: "Not Applicable",
+            reminderTitle: "For Non-Sponsored Delegates",
+            reminderItems: [],
         },
     ];
 
@@ -511,10 +516,10 @@ export default function Directory() {
                                     >
                                         <option value="">Select a Date</option>
                                         <option value="04/04/2026">
-                                            May 4, 2026
+                                            November 9, 2026
                                         </option>
                                         <option value="05/05/2026">
-                                            May 5, 2026
+                                            November 10, 2026
                                         </option>
                                     </select>
                                     {formik.touched.expected_date_of_arrival &&
