@@ -11,6 +11,8 @@ type Attendee = {
 };
 
 export default function Directory() {
+    const SUBMIT_DISABLED = true;
+
     const formik = useFormik({
         initialValues: {
             pastor_name: "",
@@ -21,6 +23,7 @@ export default function Directory() {
             expected_day_of_arrival: "",
             expected_date_of_arrival: "",
             expected_time_of_arrival: "",
+            checkout_option: "",
             sponsored: false,
             non_sponsored: false,
         },
@@ -33,36 +36,52 @@ export default function Directory() {
             expected_day_of_arrival: Yup.string().required("Day is required"),
             expected_date_of_arrival: Yup.string().required("Date is required"),
             expected_time_of_arrival: Yup.string().required("Time is required"),
+            checkout_option: Yup.string().required(
+                "Check-out option is required",
+            ),
             non_sponsored: Yup.boolean().required(
                 "Sponsorship status is required",
             ),
         }),
         onSubmit: async (values) => {
+            if (SUBMIT_DISABLED) return;
+
             setLoader(true);
+
             try {
-                const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/public-delegates/`,
-                    {
-                        method: "POST",
-                        headers: { "Content-type": "application/json" },
-                        body: JSON.stringify({
-                            ...values,
-                            attendees: attendees,
-                        }),
+                const response = await fetch("/api/delegates", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
                     },
-                );
+                    body: JSON.stringify({
+                        ...values,
+                        attendees,
+                    }),
+                });
+
                 const data = await response.json();
-                if (data.web_link) {
-                    setTimeout(() => {
-                        setShowThanks(true);
-                        formik.resetForm();
-                        setAttendees([]);
-                        setSuccessData(data);
-                        setLoader(false);
-                    }, 3000);
+
+                if (!response.ok || !data.ok) {
+                    throw new Error(
+                        data.message || "Application submission failed.",
+                    );
                 }
+
+                setShowThanks(true);
+                formik.resetForm();
+                setAttendees([
+                    {
+                        id: crypto.randomUUID(),
+                        name: "",
+                        age: "",
+                    },
+                ]);
+                setSuccessData(data);
             } catch (error) {
-                console.error(error);
+                console.error("Submission error:", error);
+                alert("Unable to submit the application. Please try again.");
+            } finally {
                 setLoader(false);
             }
         },
@@ -95,6 +114,7 @@ export default function Directory() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (SUBMIT_DISABLED) return;
         await formik.submitForm();
     };
 
@@ -121,12 +141,39 @@ export default function Directory() {
             : "";
     };
 
+    type CheckoutOption = {
+        label: string;
+        reminderTitle?: string;
+        reminderItems: string[];
+    };
+
+    const CHECKOUT_OPTIONS: CheckoutOption[] = [
+        {
+            label: "For extension (check-out on Saturday)",
+            reminderTitle: "REMINDERS:",
+            reminderItems: [
+                "Please do not bring your bags/luggages in the Conference center.",
+                "For non-sponsored, remember to bring your payments to our staff, sis. Liza Yema & sis. Merbz.",
+                "Your check-out will be Saturday 12noon.",
+            ],
+        },
+        {
+            label: "Check-out on Friday noon",
+            reminderTitle: "REMINDERS:",
+            reminderItems: [
+                "You may put your bags/luggages in the room that will be announced on Friday morning.",
+                "Please go back to your unit in Budget Hotel after Friday morning seminars to check-out.",
+                "Your check-out will be Friday noon or 1pm (latest).",
+            ],
+        },
+    ];
+
     return (
         <section id="contact" className="scroll-mt-12. pt-42">
             <div className="container">
                 <div className="">
                     <h2 className="mb-9 text-center">
-                        Delegates Registration May 2026
+                        Delegates Registration November 2026
                     </h2>
                     <label
                         hidden={showThanks}
@@ -314,6 +361,7 @@ export default function Directory() {
                                 </div>
                             </div>
                             <hr className="w-full border-gray-300 my-6" />
+
                             <h3 className="text-stone-900 mb-4 mt-4">
                                 Other Details
                             </h3>
@@ -671,6 +719,90 @@ export default function Directory() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="w-full mb-8">
+                                <h3 className="text-stone-900 mb-4 mt-4">
+                                    Check-out Options
+                                </h3>
+
+                                <div className="grid gap-4">
+                                    {CHECKOUT_OPTIONS.map((option) => (
+                                        <label
+                                            key={option.label}
+                                            className={`cursor-pointer rounded-lg border p-4 transition-colors ${
+                                                formik.values
+                                                    .checkout_option ===
+                                                option.label
+                                                    ? "border-primary bg-primary/5"
+                                                    : "border-black/20 dark:border-white/20"
+                                            }`}
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <input
+                                                    type="radio"
+                                                    name="checkout_option"
+                                                    value={option.label}
+                                                    checked={
+                                                        formik.values
+                                                            .checkout_option ===
+                                                        option.label
+                                                    }
+                                                    onChange={
+                                                        formik.handleChange
+                                                    }
+                                                    onBlur={formik.handleBlur}
+                                                    disabled={loader}
+                                                    className="mt-1"
+                                                />
+
+                                                <div>
+                                                    <span className="font-medium">
+                                                        {option.label}
+                                                    </span>
+
+                                                    {option.reminderItems
+                                                        .length > 0 && (
+                                                        <div className="mt-3">
+                                                            {option.reminderTitle && (
+                                                                <p className="font-bold text-sm mb-1">
+                                                                    {
+                                                                        option.reminderTitle
+                                                                    }
+                                                                </p>
+                                                            )}
+
+                                                            <ul className="list-disc pl-5 text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                                                                {option.reminderItems.map(
+                                                                    (
+                                                                        reminder,
+                                                                    ) => (
+                                                                        <li
+                                                                            key={
+                                                                                reminder
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                reminder
+                                                                            }
+                                                                        </li>
+                                                                    ),
+                                                                )}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+
+                                {formik.touched.checkout_option &&
+                                    formik.errors.checkout_option && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {formik.errors.checkout_option}
+                                        </p>
+                                    )}
+                            </div>
                             <div className="sm:flex gap-6 w-full">
                                 <div className="mx-0 my-2.5 flex-1">
                                     <label
@@ -693,14 +825,16 @@ export default function Directory() {
                             <div className="mx-0 my-2.5 w-full">
                                 <button
                                     type="submit"
-                                    disabled={loader}
+                                    disabled={loader || SUBMIT_DISABLED}
                                     className={`w-full text-base px-4 rounded-lg py-3 border-solid border transition-all duration-500 focus:outline-0 ${
-                                        !loader
+                                        !loader && !SUBMIT_DISABLED
                                             ? "bg-primary hover:bg-primary/90 text-white border-primary"
                                             : "bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300"
                                     }`}
                                 >
-                                    Submit Application
+                                    {SUBMIT_DISABLED
+                                        ? "Submit temporarily unavailable"
+                                        : "Submit Application"}
                                     {loader && (
                                         <span className="inline-block ml-2">
                                             <svg
