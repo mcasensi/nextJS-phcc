@@ -9,7 +9,7 @@ type Delegate = {
 };
 
 export default function Page1() {
-    const LIST_DISABLED = true;
+    const LIST_DISABLED = false;
 
     const [rows, setRows] = useState<Delegate[]>([]);
     const [loading, setLoading] = useState(true);

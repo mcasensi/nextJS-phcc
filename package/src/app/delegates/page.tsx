@@ -186,18 +186,7 @@ export default function Directory() {
                     >
                         Please fill out the form below to register as a delegate
                         for the upcoming event. We look forward to welcoming you
-                        for this coming conference. You can also view all the
-                        list of delegates{" "}
-                        <div className="mt-1 flex items-center justify-center gap-2">
-                            <label className="font-bold text-primary hover:underline">
-                                <a
-                                    href={`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
-                                    className="font-bold hover:underline"
-                                >
-                                    {`${process.env.NEXT_PUBLIC_WEB_API_URL}/delegates-list`}
-                                </a>
-                            </label>
-                        </div>
+                        for this coming conference.
                     </label>
                     <div
                         className="relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20"
@@ -491,14 +480,14 @@ export default function Directory() {
                                         onChange={(e) => {
                                             handleChange(e);
                                             if (
-                                                e.target.value === "04/04/2026"
+                                                e.target.value === "11/09/2026"
                                             ) {
                                                 formik.setFieldValue(
                                                     "expected_day_of_arrival",
                                                     "Monday",
                                                 );
                                             } else if (
-                                                e.target.value === "05/05/2026"
+                                                e.target.value === "11/10/2026"
                                             ) {
                                                 formik.setFieldValue(
                                                     "expected_day_of_arrival",
@@ -515,10 +504,10 @@ export default function Directory() {
                                         className={`w-full text-base px-4 rounded-lg border-black/20 dark:border-white/20 py-2.5 border-solid border transition-all duration-500 focus:border-primary dark:focus:border-primary focus:outline-0 ${getErrorClass("expected_date_of_arrival")} ${loader ? "bg-gray-100 dark:bg-gray-800" : ""}`}
                                     >
                                         <option value="">Select a Date</option>
-                                        <option value="04/04/2026">
+                                        <option value="11/09/2026">
                                             November 9, 2026
                                         </option>
-                                        <option value="05/05/2026">
+                                        <option value="11/10/2026">
                                             November 10, 2026
                                         </option>
                                     </select>
