@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type MinistryYears =
     | "Less than 6 months"
@@ -139,11 +139,26 @@ export default function ChildrenConferencePage() {
         }
     };
 
+    useEffect(() => {
+        if (isSubmitted) {
+            thankYouRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
+    }, [isSubmitted]);
+
+    const thankYouRef = useRef<HTMLElement>(null);
+
     if (isSubmitted) {
         return (
             <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
                 <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
-                    <section className="w-full rounded-3xl border border-emerald-200 bg-white/90 p-6 text-center shadow-sm sm:p-8">
+                    <section
+                        ref={thankYouRef}
+                        tabIndex={-1}
+                        className="w-full rounded-3xl border border-emerald-200 bg-white/90 p-6 text-center shadow-sm outline-none sm:p-8"
+                    >
                         <div className="mb-4 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
                             Submitted successfully
                         </div>
