@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -90,6 +89,16 @@ export default function Directory() {
     const [isFormValid, setIsFormValid] = useState(false);
     const [showThanks, setShowThanks] = useState(false);
     const [successData, setSuccessData] = useState<any>(null);
+    const thankYouRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (showThanks) {
+            thankYouRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    }, [showThanks]);
 
     const [attendees, setAttendees] = useState<Attendee[]>([
         {
@@ -177,7 +186,10 @@ export default function Directory() {
         <section id="contact" className="scroll-mt-12. pt-42">
             <div className="container">
                 <div className="">
-                    <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
+                    <section
+                        hidden={successData}
+                        className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8"
+                    >
                         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                             <div>
                                 <p className="mb-2 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
@@ -865,13 +877,22 @@ export default function Directory() {
                         </form>
                     </div>
                     {showThanks && (
-                        <div className="text-white px-4 text-lg mb-2 mt-1 grid-cols-1 items-center">
-                            <label className="text-center block text-lg font-medium text-gray-900 dark:text-white mb-3">
+                        <section
+                            ref={thankYouRef}
+                            className="w-full rounded-3xl border border-emerald-200 bg-white/90 p-6 text-center shadow-sm outline-none sm:p-8"
+                        >
+                            <div className="mb-4 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                                Submitted successfully
+                            </div>
+                            <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
+                                Your registration has been received.
+                            </h1>
+                            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
                                 Thank you for submitting your application! We
                                 will review your application and get back to you
                                 as soon as possible. You can also view your
                                 application on this link below:
-                            </label>
+                            </p>
                             <div className="mt-1 flex items-center justify-center gap-2">
                                 <label className="font-bold text-primary hover:underline">
                                     <a
@@ -882,7 +903,7 @@ export default function Directory() {
                                     </a>
                                 </label>
                             </div>
-                        </div>
+                        </section>
                     )}
                 </div>
             </div>
