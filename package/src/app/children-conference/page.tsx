@@ -48,9 +48,7 @@ export default function ChildrenConferencePage() {
     const [selfBooking, setSelfBooking] = useState<SelfBookingOption | "">("");
     const [expectations, setExpectations] = useState("");
 
-    const [participants, setParticipants] = useState<Participant[]>([
-        { name: "", age: "", yearsInMinistry: "" },
-    ]);
+    const [participants, setParticipants] = useState<Participant[]>([]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState("");
@@ -89,7 +87,7 @@ export default function ChildrenConferencePage() {
             (p) => !p.name.trim() || !p.age.trim() || !p.yearsInMinistry,
         );
 
-        if (hasInvalidParticipant) {
+        if (participants.length > 0 && hasInvalidParticipant) {
             setMessage("Please complete all participant fields.");
             setMessageType("error");
             return;
@@ -132,7 +130,7 @@ export default function ChildrenConferencePage() {
             setContactNumber("");
             setSelfBooking("");
             setExpectations("");
-            setParticipants([{ name: "", age: "", yearsInMinistry: "" }]);
+            setParticipants([]);
         } catch {
             setMessage("Could not submit form. Please try again.");
             setMessageType("error");
@@ -320,8 +318,8 @@ export default function ChildrenConferencePage() {
                                     Participants
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-600">
-                                    Add all participants attending the
-                                    conference.
+                                    Add participant details if applicable. This
+                                    section is optional.
                                 </p>
                             </div>
 
@@ -334,103 +332,114 @@ export default function ChildrenConferencePage() {
                             </button>
                         </div>
 
-                        <div className="space-y-4">
-                            {participants.map((participant, index) => (
-                                <div
-                                    key={index}
-                                    className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 shadow-sm sm:p-5"
-                                >
-                                    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                        <p className="font-medium text-slate-900">
-                                            Participant {index + 1}
-                                        </p>
-                                        {participants.length > 1 && (
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    removeParticipant(index)
-                                                }
-                                                className="text-sm font-medium text-red-600 transition hover:text-red-700"
-                                            >
-                                                Remove
-                                            </button>
-                                        )}
-                                    </div>
-
-                                    <div className="grid gap-3 md:grid-cols-2">
-                                        <div>
-                                            <label className="mb-1.5 block text-sm text-slate-700">
-                                                Name
-                                            </label>
-                                            <input
-                                                className={inputClassName}
-                                                value={participant.name}
-                                                onChange={(e) =>
-                                                    updateParticipant(
-                                                        index,
-                                                        "name",
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="mb-1.5 block text-sm text-slate-700">
-                                                Age
-                                            </label>
-                                            <input
-                                                type="number"
-                                                min={1}
-                                                className={inputClassName}
-                                                value={participant.age}
-                                                onChange={(e) =>
-                                                    updateParticipant(
-                                                        index,
-                                                        "age",
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <p className="mb-2 text-sm font-medium text-slate-700">
-                                            Years in children&apos;s ministry
-                                        </p>
-                                        <div className="grid gap-2 sm:grid-cols-2">
-                                            {MINISTRY_OPTIONS.map((option) => (
-                                                <label
-                                                    key={option}
-                                                    className={`${radioOptionClassName} cursor-pointer`}
+                        {participants.length === 0 ? (
+                            <p className="text-sm text-slate-500">
+                                No participant added yet. You may leave this
+                                section blank.
+                            </p>
+                        ) : (
+                            <div className="space-y-4">
+                                {participants.map((participant, index) => (
+                                    <div
+                                        key={index}
+                                        className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 shadow-sm sm:p-5"
+                                    >
+                                        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                            <p className="font-medium text-slate-900">
+                                                Participant {index + 1}
+                                            </p>
+                                            {participants.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        removeParticipant(index)
+                                                    }
+                                                    className="text-sm font-medium text-red-600 transition hover:text-red-700"
                                                 >
-                                                    <input
-                                                        type="radio"
-                                                        name={`yearsInMinistry-${index}`}
-                                                        checked={
-                                                            participant.yearsInMinistry ===
-                                                            option
-                                                        }
-                                                        onChange={() =>
-                                                            updateParticipant(
-                                                                index,
-                                                                "yearsInMinistry",
-                                                                option,
-                                                            )
-                                                        }
-                                                        required
-                                                        className="mt-0.5 h-4 w-4 border-slate-300 text-slate-900 focus:ring-slate-400"
-                                                    />
-                                                    <span>{option}</span>
+                                                    Remove
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        <div className="grid gap-3 md:grid-cols-2">
+                                            <div>
+                                                <label className="mb-1.5 block text-sm text-slate-700">
+                                                    Name
                                                 </label>
-                                            ))}
+                                                <input
+                                                    className={inputClassName}
+                                                    value={participant.name}
+                                                    onChange={(e) =>
+                                                        updateParticipant(
+                                                            index,
+                                                            "name",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="mb-1.5 block text-sm text-slate-700">
+                                                    Age
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    className={inputClassName}
+                                                    value={participant.age}
+                                                    onChange={(e) =>
+                                                        updateParticipant(
+                                                            index,
+                                                            "age",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <p className="mb-2 text-sm font-medium text-slate-700">
+                                                Years in children&apos;s
+                                                ministry
+                                            </p>
+                                            <div className="grid gap-2 sm:grid-cols-2">
+                                                {MINISTRY_OPTIONS.map(
+                                                    (option) => (
+                                                        <label
+                                                            key={option}
+                                                            className={`${radioOptionClassName} cursor-pointer`}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`yearsInMinistry-${index}`}
+                                                                checked={
+                                                                    participant.yearsInMinistry ===
+                                                                    option
+                                                                }
+                                                                onChange={() =>
+                                                                    updateParticipant(
+                                                                        index,
+                                                                        "yearsInMinistry",
+                                                                        option,
+                                                                    )
+                                                                }
+                                                                className="mt-0.5 h-4 w-4 border-slate-300 text-slate-900 focus:ring-slate-400"
+                                                            />
+                                                            <span>
+                                                                {option}
+                                                            </span>
+                                                        </label>
+                                                    ),
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </section>
 
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

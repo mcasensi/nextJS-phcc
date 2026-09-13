@@ -177,17 +177,24 @@ export default function Directory() {
         <section id="contact" className="scroll-mt-12. pt-42">
             <div className="container">
                 <div className="">
-                    <h2 className="mb-9 text-center">
-                        Delegates Registration November 2026
-                    </h2>
-                    <label
-                        hidden={showThanks}
-                        className="text-center block text-lg font-medium text-gray-900 dark:text-white mb-10"
-                    >
-                        Please fill out the form below to register as a delegate
-                        for the upcoming event. We look forward to welcoming you
-                        for this coming conference.
-                    </label>
+                    <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                            <div>
+                                <p className="mb-2 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+                                    International Bible Conference November 2026
+                                </p>
+                                <h1 className="text-2xl font-semibold text-slate-900 sm:text-3xl">
+                                    Delegates Registration
+                                </h1>
+                                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                                    Please fill out the form below to register
+                                    as a delegate for the upcoming event. We
+                                    look forward to welcoming you for this
+                                    coming conference.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
                     <div
                         className="relative border px-6 py-2 rounded-lg border-black/20 dark:border-white/20"
                         hidden={successData}
