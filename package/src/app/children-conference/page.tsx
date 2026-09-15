@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type MinistryYears =
     | "Less than 6 months"
@@ -45,12 +46,16 @@ export default function ChildrenConferencePage() {
     const [churchCity, setChurchCity] = useState("");
     const [pastorName, setPastorName] = useState("");
     const [contactNumber, setContactNumber] = useState("");
+    const [email, setEmail] = useState("");
     const [selfBooking, setSelfBooking] = useState<SelfBookingOption | "">("");
     const [expectations, setExpectations] = useState("");
 
     const [participants, setParticipants] = useState<Participant[]>([]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [registrationStatus, setRegistrationStatus] = useState<
+        "OPEN" | "CLOSED"
+    >("CLOSED");
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState<"success" | "error" | "">(
         "",
@@ -101,6 +106,7 @@ export default function ChildrenConferencePage() {
                 churchCity,
                 pastorName,
                 contactNumber,
+                email,
             },
             selfBooking,
             expectations,
@@ -128,6 +134,7 @@ export default function ChildrenConferencePage() {
             setChurchCity("");
             setPastorName("");
             setContactNumber("");
+            setEmail("");
             setSelfBooking("");
             setExpectations("");
             setParticipants([]);
@@ -145,6 +152,7 @@ export default function ChildrenConferencePage() {
                 behavior: "smooth",
                 block: "center",
             });
+            setRegistrationStatus("CLOSED");
         }
     }, [isSubmitted]);
 
@@ -169,6 +177,101 @@ export default function ChildrenConferencePage() {
                             Thank you for registering for the conference. We
                             will be in touch soon.
                         </p>
+                    </section>
+                </div>
+            </main>
+        );
+    }
+
+    if (registrationStatus === "CLOSED") {
+        return (
+            <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
+                <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
+                    <section className="grid gap-5 md:grid-cols-2">
+                        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                            <Image
+                                src="/images/children-conference/CWC%202026.png"
+                                alt="Children's World Conference 2026"
+                                width={1200}
+                                height={800}
+                                className="h-auto w-full"
+                                priority
+                            />
+                        </div>
+
+                        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                            <Image
+                                src="/images/children-conference/CWC%202026-session.png"
+                                alt="Children's World Conference 2026 sessions"
+                                width={1200}
+                                height={800}
+                                className="h-auto w-full"
+                            />
+                        </div>
+
+                        <div className="md:col-span-2 rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 text-center shadow-sm sm:p-8">
+                            <div className="mb-3 inline-flex items-center rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">
+                                Save the date
+                            </div>
+
+                            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                                The countdown is on! ⏳
+                            </h2>
+
+                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                                We can&apos;t wait to welcome you to the
+                                Children&apos;s Workers Conference 2026. Come
+                                prepared to be equipped, encouraged, and
+                                inspired to serve the next generation.
+                            </p>
+
+                            <div className="mx-auto mt-6 max-w-md grid grid-cols-1 gap-3 sm:grid-cols-1">
+                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Conference dates
+                                    </p>
+                                    <p className="mt-1 text-lg font-bold text-indigo-700">
+                                        September 24–25, 2026
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                        Location
+                                    </p>
+                                    <p className="mt-1 text-lg font-bold text-indigo-700">
+                                        The Potter's House Mandaluyong
+                                    </p>
+                                    <p className="mt-1 text-sm leading-5 text-slate-600">
+                                        #29 Mayon St., Brgy. Malamig, Boni
+                                        Avenue,
+                                        <br />
+                                        Mandaluyong City
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
+                                    <p className="mt-1 text-base font-semibold text-slate-800 sm:text-lg">
+                                        Register Now
+                                    </p>
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setRegistrationStatus("OPEN")
+                                        }
+                                        className="mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        Open Registration Form
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.15em] text-amber-600 sm:text-base">
+                                Minor but Major
+                            </p>
+                            <p className="mt-1 text-base font-semibold text-slate-800 sm:text-lg">
+                                Minors Making Major Impact!
+                            </p>
+                        </div>
                     </section>
                 </div>
             </main>
@@ -259,7 +362,7 @@ export default function ChildrenConferencePage() {
                                 />
                             </div>
 
-                            <div className="md:col-span-2">
+                            <div>
                                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
                                     Contact#
                                 </label>
@@ -270,6 +373,18 @@ export default function ChildrenConferencePage() {
                                     onChange={(e) =>
                                         setContactNumber(e.target.value)
                                     }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    className={inputClassName}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
