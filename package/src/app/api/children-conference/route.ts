@@ -5,8 +5,7 @@ export async function POST(req: Request) {
         const body = await req.json();
 
         const webhookUrl =
-            process.env.NEXT_GOOGLE_SHEETS_WEBHOOK_URL ||
-            process.env.NEXT_PUBLIC_GOOGLE_SHEETS_WEBHOOK_URL;
+            process.env.NEXT_CONFERERENCE_NOV_2026_SHEETS_WEBHOOK_URL;
 
         if (!webhookUrl) {
             return NextResponse.json(
