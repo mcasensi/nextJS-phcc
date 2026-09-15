@@ -45,6 +45,7 @@ export default function ChildrenConferencePage() {
     const [churchCity, setChurchCity] = useState("");
     const [pastorName, setPastorName] = useState("");
     const [contactNumber, setContactNumber] = useState("");
+    const [email, setEmail] = useState("");
     const [selfBooking, setSelfBooking] = useState<SelfBookingOption | "">("");
     const [expectations, setExpectations] = useState("");
 
@@ -101,6 +102,7 @@ export default function ChildrenConferencePage() {
                 churchCity,
                 pastorName,
                 contactNumber,
+                email,
             },
             selfBooking,
             expectations,
@@ -128,6 +130,7 @@ export default function ChildrenConferencePage() {
             setChurchCity("");
             setPastorName("");
             setContactNumber("");
+            setEmail("");
             setSelfBooking("");
             setExpectations("");
             setParticipants([]);
@@ -259,7 +262,7 @@ export default function ChildrenConferencePage() {
                                 />
                             </div>
 
-                            <div className="md:col-span-2">
+                            <div>
                                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
                                     Contact#
                                 </label>
@@ -270,6 +273,18 @@ export default function ChildrenConferencePage() {
                                     onChange={(e) =>
                                         setContactNumber(e.target.value)
                                     }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    className={inputClassName}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
                             </div>
