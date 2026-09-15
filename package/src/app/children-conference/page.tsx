@@ -158,6 +158,11 @@ export default function ChildrenConferencePage() {
 
     const thankYouRef = useRef<HTMLElement>(null);
 
+    const [selectedImage, setSelectedImage] = useState<{
+        src: string;
+        alt: string;
+    } | null>(null);
+
     if (isSubmitted) {
         return (
             <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
@@ -189,24 +194,48 @@ export default function ChildrenConferencePage() {
                 <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
                     <section className="grid gap-5 md:grid-cols-2">
                         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                            <Image
-                                src="/images/children-conference/CWC%202026.png"
-                                alt="Children's World Conference 2026"
-                                width={1200}
-                                height={800}
-                                className="h-auto w-full"
-                                priority
-                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setSelectedImage({
+                                        src: "/images/children-conference/CWC%202026.png",
+                                        alt: "Children's World Conference 2026",
+                                    })
+                                }
+                                className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                                aria-label="View Children's World Conference 2026 image"
+                            >
+                                <Image
+                                    src="/images/children-conference/CWC%202026.png"
+                                    alt="Children's World Conference 2026"
+                                    width={1200}
+                                    height={800}
+                                    className="h-auto w-full transition duration-300 hover:scale-105"
+                                    priority
+                                />
+                            </button>
                         </div>
 
                         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                            <Image
-                                src="/images/children-conference/CWC%202026-session.png"
-                                alt="Children's World Conference 2026 sessions"
-                                width={1200}
-                                height={800}
-                                className="h-auto w-full"
-                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setSelectedImage({
+                                        src: "/images/children-conference/CWC%202026-session.png",
+                                        alt: "Children's World Conference 2026 sessions",
+                                    })
+                                }
+                                className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                                aria-label="View Children's World Conference 2026 sessions image"
+                            >
+                                <Image
+                                    src="/images/children-conference/CWC%202026-session.png"
+                                    alt="Children's World Conference 2026 sessions"
+                                    width={1200}
+                                    height={800}
+                                    className="h-auto w-full transition duration-300 hover:scale-105"
+                                />
+                            </button>
                         </div>
 
                         <div className="md:col-span-2 rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 text-center shadow-sm sm:p-8">
@@ -274,6 +303,39 @@ export default function ChildrenConferencePage() {
                         </div>
                     </section>
                 </div>
+
+                {selectedImage && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={selectedImage.alt}
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <div
+                            className="relative max-h-[90vh] max-w-5xl"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            <Image
+                                src={selectedImage.src}
+                                alt={selectedImage.alt}
+                                width={1600}
+                                height={1100}
+                                className="max-h-[85vh] w-auto rounded-2xl object-contain shadow-2xl"
+                                priority
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setSelectedImage(null)}
+                                className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-slate-800 shadow-lg transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white"
+                                aria-label="Close image preview"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    </div>
+                )}
             </main>
         );
     }
@@ -581,6 +643,12 @@ export default function ChildrenConferencePage() {
                             {isSubmitting
                                 ? "Submitting..."
                                 : "Submit Registration"}
+                        </button>
+                        <button
+                            onClick={() => setRegistrationStatus("CLOSED")}
+                            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {"Cancel"}
                         </button>
 
                         {message && (
