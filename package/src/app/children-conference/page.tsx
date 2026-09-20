@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import ConferenceScheduleSection from "./speaker";
 
 type MinistryYears =
     | "Less than 6 months"
@@ -40,6 +41,8 @@ const sectionClassName =
 const radioOptionClassName =
     "flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300 hover:bg-white";
 
+const pdfUrl = "/images/children-conference/cwc2026.pdf";
+
 export default function ChildrenConferencePage() {
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
@@ -61,6 +64,7 @@ export default function ChildrenConferencePage() {
         "",
     );
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
     const addParticipant = () => {
         setParticipants((prev) => [
@@ -165,7 +169,7 @@ export default function ChildrenConferencePage() {
 
     if (isSubmitted) {
         return (
-            <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
+            <main className="mt-24 min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
                 <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
                     <section
                         ref={thankYouRef}
@@ -190,149 +194,179 @@ export default function ChildrenConferencePage() {
 
     if (registrationStatus === "CLOSED") {
         return (
-            <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
-                <div className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center">
-                    <section className="grid gap-5 md:grid-cols-2">
-                        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setSelectedImage({
-                                        src: "/images/children-conference/CWC%202026.png",
-                                        alt: "Children's World Conference 2026",
-                                    })
-                                }
-                                className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
-                                aria-label="View Children's World Conference 2026 image"
-                            >
-                                <Image
-                                    src="/images/children-conference/CWC%202026.png"
-                                    alt="Children's World Conference 2026"
-                                    width={1200}
-                                    height={800}
-                                    className="h-auto w-full transition duration-300 hover:scale-105"
-                                    priority
-                                />
-                            </button>
-                        </div>
-
-                        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    setSelectedImage({
-                                        src: "/images/children-conference/CWC%202026-session.png",
-                                        alt: "Children's World Conference 2026 sessions",
-                                    })
-                                }
-                                className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
-                                aria-label="View Children's World Conference 2026 sessions image"
-                            >
-                                <Image
-                                    src="/images/children-conference/CWC%202026-session.png"
-                                    alt="Children's World Conference 2026 sessions"
-                                    width={1200}
-                                    height={800}
-                                    className="h-auto w-full transition duration-300 hover:scale-105"
-                                />
-                            </button>
-                        </div>
-
-                        <div className="md:col-span-2 rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 text-center shadow-sm sm:p-8">
-                            <div className="mb-3 inline-flex items-center rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">
-                                Save the date
+            <main className="mt-24 min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+                <div className="mx-auto max-w-6xl">
+                    <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
+                        <div className="grid gap-5 lg:grid-cols-[1.1fr_1.9fr] lg:items-center">
+                            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setSelectedImage({
+                                            src: "/images/children-conference/CWC%202026.png",
+                                            alt: "Children's World Conference 2026",
+                                        })
+                                    }
+                                    className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                                    aria-label="View Children's World Conference 2026 image"
+                                >
+                                    <Image
+                                        src="/images/children-conference/CWC%202026.png"
+                                        alt="Children's World Conference 2026"
+                                        width={1200}
+                                        height={800}
+                                        className="h-auto w-full transition duration-300 hover:scale-105"
+                                        priority
+                                    />
+                                </button>
                             </div>
 
-                            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                                The countdown is on! ⏳
-                            </h2>
-
-                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                                We can&apos;t wait to welcome you to the
-                                Children&apos;s Workers Conference 2026. Come
-                                prepared to be equipped, encouraged, and
-                                inspired to serve the next generation.
-                            </p>
-
-                            <div className="mx-auto mt-6 max-w-md grid grid-cols-1 gap-3 sm:grid-cols-1">
-                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Conference dates
-                                    </p>
-                                    <p className="mt-1 text-lg font-bold text-indigo-700">
-                                        September 24–25, 2026
-                                    </p>
-                                </div>
-                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                        Location
-                                    </p>
-                                    <p className="mt-1 text-lg font-bold text-indigo-700">
-                                        The Potter's House Mandaluyong
-                                    </p>
-                                    <p className="mt-1 text-sm leading-5 text-slate-600">
-                                        #29 Mayon St., Brgy. Malamig, Boni
-                                        Avenue,
-                                        <br />
-                                        Mandaluyong City
-                                    </p>
-                                </div>
-                                <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
-                                    <p className="mt-1 text-base font-semibold text-slate-800 sm:text-lg">
-                                        Register Now
-                                    </p>
-
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setRegistrationStatus("OPEN")
-                                        }
-                                        className="mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        Open Registration Form
-                                    </button>
-                                </div>
+                            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setSelectedImage({
+                                            src: "/images/children-conference/CWC%202026-session.png",
+                                            alt: "Children's World Conference 2026 sessions",
+                                        })
+                                    }
+                                    className="block w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                                    aria-label="View Children's World Conference 2026 sessions image"
+                                >
+                                    <Image
+                                        src="/images/children-conference/CWC%202026-session.png"
+                                        alt="Children's World Conference 2026 sessions"
+                                        width={1200}
+                                        height={800}
+                                        className="h-auto w-full transition duration-300 hover:scale-105"
+                                    />
+                                </button>
                             </div>
-
-                            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.15em] text-amber-600 sm:text-base">
-                                Minor but Major
-                            </p>
-                            <p className="mt-1 text-base font-semibold text-slate-800 sm:text-lg">
-                                Minors Making Major Impact!
-                            </p>
                         </div>
                     </section>
+
+                    <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 text-center shadow-sm sm:p-8">
+                        <div className="mb-3 inline-flex items-center rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">
+                            Children's Workers Conference 2026
+                        </div>
+
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                            Thank you for Participating!
+                        </h2>
+
+                        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                            We appreciate your dedication and commitment to
+                            nurturing the next generation. Your participation in
+                            the Children&apos;s Workers Conference 2026 has made
+                            a significant impact, and we look forward to seeing
+                            you at future events.
+                        </p>
+
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                    Conference dates
+                                </p>
+                                <p className="mt-1 text-lg font-bold text-indigo-700">
+                                    September 24–25, 2026
+                                </p>
+                            </div>
+
+                            <div className="rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-slate-200">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                    Location
+                                </p>
+                                <p className="mt-1 text-lg font-bold text-indigo-700">
+                                    The Potter&apos;s House
+                                </p>
+                                <p className="mt-1 text-sm leading-5 text-slate-600">
+                                    Mandaluyong City
+                                </p>
+                            </div>
+
+                            <div className="rounded-2xl bg-white px-5 py-3 text-center shadow-sm ring-1 ring-slate-200 sm:col-span-2 lg:col-span-1">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                    Theme
+                                </p>
+                                <p className="mt-1 text-base font-semibold text-slate-800 sm:text-lg">
+                                    Minor but Major
+                                </p>
+                                <p className="mt-1 text-sm text-slate-600">
+                                    Minors Making Major Impact!
+                                </p>
+                            </div>
+                            <div className="rounded-2xl bg-white px-5 py-3 text-center shadow-sm ring-1 ring-slate-200 sm:col-span-2 lg:col-span-1">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                    Download PDF Pamphlet
+                                </p>
+
+                                <div className="mt-3 flex flex-col gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsPdfModalOpen(true)}
+                                        className="inline-flex items-center justify-center rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+                                    >
+                                        Preview PDF
+                                    </button>
+
+                                    <a
+                                        href={pdfUrl}
+                                        download
+                                        className="inline-flex items-center justify-center rounded border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100"
+                                    >
+                                        Download PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div className="mt-8">
+                        <ConferenceScheduleSection />
+                    </div>
                 </div>
 
-                {selectedImage && (
+                {isPdfModalOpen && (
                     <div
                         className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label={selectedImage.alt}
-                        onClick={() => setSelectedImage(null)}
+                        onClick={() => setIsPdfModalOpen(false)}
                     >
                         <div
-                            className="relative max-h-[90vh] max-w-5xl"
+                            className="relative w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl"
                             onClick={(event) => event.stopPropagation()}
                         >
-                            <Image
-                                src={selectedImage.src}
-                                alt={selectedImage.alt}
-                                width={1600}
-                                height={1100}
-                                className="max-h-[85vh] w-auto rounded-2xl object-contain shadow-2xl"
-                                priority
-                            />
+                            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+                                <h3 className="text-base font-semibold text-slate-800">
+                                    Conference Pamphlet
+                                </h3>
 
-                            <button
-                                type="button"
-                                onClick={() => setSelectedImage(null)}
-                                className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-slate-800 shadow-lg transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-white"
-                                aria-label="Close image preview"
-                            >
-                                &times;
-                            </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsPdfModalOpen(false)}
+                                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-xl text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                                    aria-label="Close PDF preview"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+
+                            <div className="bg-slate-100 p-2">
+                                <iframe
+                                    src={pdfUrl}
+                                    title="Conference pamphlet preview"
+                                    className="h-[70vh] w-full rounded-xl border-0"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3 border-t border-slate-200 px-4 py-3">
+                                <a
+                                    href={pdfUrl}
+                                    download
+                                    className="inline-flex items-center justify-center rounded border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100"
+                                >
+                                    Download PDF
+                                </a>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -341,7 +375,7 @@ export default function ChildrenConferencePage() {
     }
 
     return (
-        <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 mt-25">
+        <main className="mt-24 min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
             <div className="mx-auto max-w-5xl">
                 <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -438,6 +472,7 @@ export default function ChildrenConferencePage() {
                                     required
                                 />
                             </div>
+
                             <div>
                                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
                                     Email
@@ -571,6 +606,7 @@ export default function ChildrenConferencePage() {
                                                     required
                                                 />
                                             </div>
+
                                             <div>
                                                 <label className="mb-1.5 block text-sm text-slate-700">
                                                     Age
@@ -644,11 +680,13 @@ export default function ChildrenConferencePage() {
                                 ? "Submitting..."
                                 : "Submit Registration"}
                         </button>
+
                         <button
+                            type="button"
                             onClick={() => setRegistrationStatus("CLOSED")}
-                            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
                         >
-                            {"Cancel"}
+                            Cancel
                         </button>
 
                         {message && (
