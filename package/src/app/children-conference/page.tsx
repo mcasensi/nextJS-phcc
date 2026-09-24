@@ -41,7 +41,8 @@ const sectionClassName =
 const radioOptionClassName =
     "flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 transition hover:border-slate-300 hover:bg-white";
 
-const pdfUrl = "/images/children-conference/cwc2026.pdf";
+const pdfUrl =
+    "https://pottershousephils.s3.ap-southeast-2.amazonaws.com/sunday-school/children-conference/2026/CWC+BOOKLET+2026+FINAL.pdf";
 
 export default function ChildrenConferencePage() {
     const [name, setName] = useState("");

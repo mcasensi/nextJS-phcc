@@ -1,41 +1,31 @@
 const conferenceSessions = [
     {
-        title: "#1 Minor but Major: Introduction",
-        speakers: ["Ptr. Joemari Asensi"],
-        link: "",
-    },
-    {
-        title: "#2 Understanding Today’s Child",
+        title: "Understanding Today’s Child",
         speakers: ["Judy Asensi"],
-        link: "",
+        link: "https://canva.link/2kubjoon9mv8tj4",
     },
     {
-        title: "#3 Teaching that Changes Lives",
+        title: "Teaching that Changes Lives",
         speakers: ["Merbennyll Cruz"],
-        link: "",
+        link: "https://canva.link/jwb6z862gkjcn8e",
     },
     {
-        title: "#4 Building Safe Spaces",
+        title: "Building Safe Spaces",
         speakers: ["Liza Yema"],
-        link: "",
+        link: "https://canva.link/ffcmzoiyiwybzl9",
     },
     {
-        title: "#5 Leading Children to Jesus",
-        speakers: ["Ptr. Joemari Asensi"],
-        link: "",
-    },
-    {
-        title: "#6 Maximizing Sunday School Resources",
+        title: "Maximizing Sunday School Resources",
         speakers: ["Marjorie Asensi"],
-        link: "",
+        link: "https://canva.link/tswfat9ykvpan0l",
     },
     {
-        title: "#7 The Heart of Sunday School\nMore than a Classroom - A Ministry that Changes Lives",
+        title: "The Heart of Sunday School\nMore than a Classroom - A Ministry that Changes Lives",
         speakers: ["Merbennyll Cruz", "Liza Yema", "Judy Asensi"],
         link: "",
     },
     {
-        title: "#8 Junior Church\nGrowing Young Disciples Through Meaningful Worship",
+        title: "Junior Church\nGrowing Young Disciples Through Meaningful Worship",
         speakers: ["EG Hernandez"],
         link: "",
     },
