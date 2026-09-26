@@ -44,6 +44,105 @@ const radioOptionClassName =
 const pdfUrl =
     "https://pottershousephils.s3.ap-southeast-2.amazonaws.com/sunday-school/children-conference/2026/CWC+BOOKLET+2026+FINAL.pdf";
 
+const FAQ_ITEMS = [
+    {
+        question:
+            "Ano po ang dapat gawin kung napapansin naming nahihirapan ang isang bata sa Kids Church?",
+        answer: "Unang-una, obserbahan at unawain ang bata. Hindi agad kailangang isipin na may diagnosis siya. Tingnan kung nahihirapan siyang sumunod sa instructions, manatiling nakaupo, makipaglaro, makipag-communicate, makasabay sa activities, o mag-adjust sa ingay at maraming tao.",
+    },
+    {
+        question: "Paano namin matutulungan ang bata habang nasa Kids Church?",
+        answer: "Gumamit ng simple at malinaw na instructions, isang instruction sa bawat pagkakataon, sapat na processing time, visual aids, demonstrations, short breaks, at mas tahimik na lugar kung overwhelmed siya. Maaari ring magkaroon ng teacher, volunteer, o assistant na susuporta sa kanya.",
+    },
+    {
+        question: "Ano ang ibig sabihin ng “ma-contain” ang bata?",
+        answer: "Mas magandang intindihin ito bilang pag-manage at pag-support sa bata upang manatili siyang safe, calm, at makalahok sa activity. Hindi ito nangangahulugan ng pagsigaw, pagpapahiya, o sapilitang pagpigil.",
+    },
+    {
+        question: "Ano ang gagawin kung nag-tantrum o nag-meltdown ang bata?",
+        answer: "Manatiling kalmado at iwasang pagalitan o sigawan ang bata. Bawasan ang ingay o stimulation, bigyan siya ng space, ilipat sa mas tahimik na lugar, hayaan siyang kumalma, at tawagin ang parent o guardian kung kinakailangan. Priority ang safety at emotional regulation.",
+    },
+    {
+        question:
+            "Paano kung nananakit, nanununtok, nangangagat, o naninipa ang bata?",
+        answer: "Unahin ang safety ng bata at ibang children. Ilayo ang ibang bata, manatiling kalmado, huwag sigawan o ipahiya ang bata, at humingi ng tulong sa parent, guardian, o designated church worker. Pag-usapan pagkatapos ang posibleng trigger ng behavior.",
+    },
+    {
+        question:
+            "Paano kung ayaw ng bata sa malakas na music, singing, o maraming tao?",
+        answer: "Huwag siyang piliting sumali kung clearly uncomfortable o distressed siya. Maaaring paupuin siya sa mas tahimik na lugar, bigyan ng break, bawasan ang exposure sa loud sounds, at bigyan siya ng warning bago magsimula ang loud activity.",
+    },
+    {
+        question:
+            "Kailangan ba niyang sumali sa lahat ng activities tulad ng ibang bata?",
+        answer: "Hindi kailangang pare-pareho ang paraan ng participation ng lahat ng bata. Maaaring i-adjust ang activity ayon sa kakayahan at needs ng bata. Ang goal ay inclusion at participation, hindi perfect compliance.",
+    },
+    {
+        question: "Ano ang mga DO’s ng Sunday School teachers?",
+        answer: "Maging patient at calm. Observe without judging. Gumamit ng simple at clear instructions, magbigay ng processing time at breaks, panatilihing safe ang lahat, kilalanin ang strengths ng bata, makipag-usap nang maayos sa parents, at makipag-coordinate sa church leaders kung kinakailangan.",
+    },
+    {
+        question: "Ano naman ang mga DON’Ts?",
+        answer: "Huwag sigawan, takutin, ipahiya, o ikumpara ang bata. Huwag siyang tawaging “pasaway,” “makulit,” o “problem child.” Huwag piliting sumali kapag distressed, gumamit ng isolation bilang punishment, o basta magbigay ng diagnosis. Igalang ang privacy ng bata at pamilya.",
+    },
+    {
+        question:
+            "Kailangan ba naming kausapin ang parents kung may napapansin kaming concern?",
+        answer: "Oo, ngunit gawin ito nang maingat, respectful, at private. Pag-usapan ang specific behaviors na napansin at itanong kung ano ang nakatutulong sa bata. Layunin ng conversation ang pakikipagtulungan, hindi paninisi.",
+    },
+    {
+        question:
+            "Paano kung ma-offend ang parents kapag sinabi naming may concern kami?",
+        answer: "Iwasan ang pagsasabi ng “Mukhang autistic po ang anak ninyo” o “May problema po ang anak ninyo.” Sa halip, sabihin: “Gusto po naming malaman kung paano namin siya mas matutulungan habang nasa Kids Church.”",
+    },
+    {
+        question: "Paano kung ayaw ng parents na magpacheck ang kanilang anak?",
+        answer: "Irespeto ang decision ng parents. Hindi tungkulin ng Sunday School teacher na pilitin sila. Patuloy na magbigay ng appropriate support at panatilihing bukas ang communication sa family.",
+    },
+    {
+        question:
+            "Maaari po ba naming irekomenda na magpatingin ang bata sa doctor?",
+        answer: "Oo. Kung may persistent concerns tungkol sa development, communication, behavior, o learning, maaaring maingat na i-suggest ang professional evaluation. Maaaring unang hakbang ang pediatrician, na maaaring mag-refer sa developmental-behavioral o neurodevelopmental pediatrician.",
+    },
+    {
+        question: "Maaari po ba naming i-recommend agad ang DevPed?",
+        answer: "Maaari itong i-suggest kung may developmental concerns, ngunit hindi dapat sabihin ng teacher na kailangan ng bata ng DevPed dahil mayroon siyang diagnosis. Mas appropriate na sabihin: “Baka makatulong po na ma-assess siya ng pediatrician para malaman kung may additional support na kailangan niya.”",
+    },
+    {
+        question:
+            "Maaari po bang direct na i-refer sa Occupational Therapy (OT)?",
+        answer: "Depende sa requirements ng OT center. May tumatanggap ng referrals mula sa specialists, teachers, o self-referral ng parents. Encouraged pa rin ang evaluation ng developmental or neurodevelopmental specialist.",
+    },
+    {
+        question:
+            "Kailangan po bang may diagnosis muna bago makatanggap ng support?",
+        answer: "Hindi. Maaari nang magbigay ng basic accommodations tulad ng simple instructions, breaks, quieter space, visual cues, at additional assistance. Ang diagnosis at clinical assessment ay trabaho ng qualified professionals.",
+    },
+    {
+        question:
+            "Paano kung kailangan ng assessment o therapy pero hindi kaya ng family financially?",
+        answer: "Maaaring magtanong ang family tungkol sa financial assistance mula sa LGU, Mayor’s Office, D/CSWDO, Governor’s Office, DOH assistance programs gaya ng MAIFIP, at PCSO. Maaaring mag-iba ang requirements depende sa lugar.",
+    },
+    {
+        question:
+            "May public hospital ba na maaaring mag-offer ng free o subsidized evaluation at therapy?",
+        answer: "Maaaring mag-check sa government hospitals at local government health facilities. Halimbawa, ang PGH ay may evaluation at therapy services, ngunit maaaring mahaba ang waiting time at limitado ang slots.",
+    },
+    {
+        question: "Ano ang kailangan para makakuha ng financial assistance?",
+        answer: "Depende sa agency, ngunit maaaring hingin ang medical abstract, doctor’s evaluation o diagnosis, quotation ng services, at iba pang supporting documents. Direktang i-check ang current requirements ng agency o hospital.",
+    },
+    {
+        question: "Ano ang guarantee letter at saan ito maaaring gamitin?",
+        answer: "Ang guarantee letter ay maaaring gamitin bilang bahagi ng financial assistance para sa qualified families. May ilang hospitals o centers na tumatanggap nito mula sa government assistance programs gaya ng DOH o PCSO, depende sa kanilang policies.",
+    },
+    {
+        question:
+            "Ano ang role ng Sunday School teacher sa isang batang may possible special needs?",
+        answer: "Hindi role ng teacher ang mag-diagnose o mag-therapy. Ang simple guide ay: OBSERVE → SUPPORT → COMMUNICATE → INCLUDE → KEEP SAFE → REFER WHEN APPROPRIATE. Ang bata ay kailangang maunawaan, mahalin, suportahan, at maisama sa Kids Church.",
+    },
+] as const;
+
 export default function ChildrenConferencePage() {
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
@@ -245,7 +344,6 @@ export default function ChildrenConferencePage() {
                             </div>
                         </div>
                     </section>
-
                     <section className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 text-center shadow-sm sm:p-8">
                         <div className="mb-3 inline-flex items-center rounded-full bg-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">
                             Children's Workers Conference 2026
@@ -298,7 +396,7 @@ export default function ChildrenConferencePage() {
                             </div>
                             <div className="rounded-2xl bg-white px-5 py-3 text-center shadow-sm ring-1 ring-slate-200 sm:col-span-2 lg:col-span-1">
                                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                    Download PDF Pamphlet
+                                    Download the Booklet
                                 </p>
 
                                 <div className="mt-3 flex flex-col gap-2">
@@ -321,9 +419,46 @@ export default function ChildrenConferencePage() {
                             </div>
                         </div>
                     </section>
+                    <div>
+                        <div className="mt-8">
+                            <ConferenceScheduleSection />
+                        </div>
+                        <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+                            <div className="mb-6">
+                                <p className="text-lg font-semibold uppercase tracking-[0.2em] text-indigo-600">
+                                    (FAQ) Frequently Asked Questions
+                                </p>
+                                <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                                    Pag-support sa mga Batang Maaaring May
+                                    Special Needs sa Kids Church
+                                </h2>
+                            </div>
 
-                    <div className="mt-8">
-                        <ConferenceScheduleSection />
+                            <div className="space-y-3">
+                                {FAQ_ITEMS.map((item, index) => (
+                                    <details
+                                        key={item.question}
+                                        className="group rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+                                        open={index === 0}
+                                    >
+                                        <summary className="cursor-pointer list-none pr-8 font-semibold text-slate-800 marker:hidden">
+                                            <span className="flex items-start justify-between gap-4">
+                                                <span>
+                                                    {index + 1}. {item.question}
+                                                </span>
+                                                <span className="text-xl text-indigo-600 transition-transform group-open:rotate-45">
+                                                    +
+                                                </span>
+                                            </span>
+                                        </summary>
+
+                                        <p className="mt-3 whitespace-pre-line border-t border-slate-200 pt-3 text-sm leading-7 text-slate-600">
+                                            {item.answer}
+                                        </p>
+                                    </details>
+                                ))}
+                            </div>
+                        </section>
                     </div>
                 </div>
 

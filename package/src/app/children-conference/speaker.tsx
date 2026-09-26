@@ -22,12 +22,12 @@ const conferenceSessions = [
     {
         title: "The Heart of Sunday School\nMore than a Classroom - A Ministry that Changes Lives",
         speakers: ["Merbennyll Cruz", "Liza Yema", "Judy Asensi"],
-        link: "",
+        link: "https://canva.link/z0zoes0h0l95yyv",
     },
     {
         title: "Junior Church\nGrowing Young Disciples Through Meaningful Worship",
         speakers: ["EG Hernandez"],
-        link: "",
+        link: "https://pottershousephils.s3.ap-southeast-2.amazonaws.com/sunday-school/children-conference/2026/Junior+Church-Growing+Young+Disciple.jpg",
     },
 ];
 
