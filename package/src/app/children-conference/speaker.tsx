@@ -27,7 +27,17 @@ const conferenceSessions = [
     {
         title: "Junior Church\nGrowing Young Disciples Through Meaningful Worship",
         speakers: ["EG Hernandez"],
+        link: "https://canva.link/tg1s42qutx7sefn",
+    },
+    {
+        title: "The Law and the Church and the Children",
+        speakers: null,
         link: "https://pottershousephils.s3.ap-southeast-2.amazonaws.com/sunday-school/children-conference/2026/Junior+Church-Growing+Young+Disciple.jpg",
+    },
+    {
+        title: "Through the Years..",
+        speakers: null,
+        link: "https://canva.link/2phv9234osqkhje",
     },
 ];
 
@@ -77,14 +87,18 @@ export default function ConferenceScheduleSection() {
                             </div>
 
                             <div className="border-r border-slate-300 px-4 py-5 text-center text-sm font-medium text-slate-800 sm:text-base">
-                                {session.speakers.map((speaker, idx) => (
-                                    <div
-                                        key={`${speaker}-${idx}`}
-                                        className={idx > 0 ? "mt-1" : ""}
-                                    >
-                                        {speaker}
-                                    </div>
-                                ))}
+                                {session.speakers ? (
+                                    session.speakers.map((speaker, idx) => (
+                                        <div
+                                            key={`${speaker}-${idx}`}
+                                            className={idx > 0 ? "mt-1" : ""}
+                                        >
+                                            {speaker}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <span className="text-slate-400">—</span>
+                                )}
                             </div>
 
                             <div className="px-4 py-5 text-center text-sm text-slate-400 sm:text-base">

@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ConferenceScheduleSection from "./speaker";
+import ConferenceImageCarousel from "./ConferenceImageCarousel";
 
 type MinistryYears =
     | "Less than 6 months"
@@ -296,6 +297,7 @@ export default function ChildrenConferencePage() {
         return (
             <main className="mt-24 min-h-screen bg-[linear-gradient(135deg,#f8fafc_0%,#eef2ff_100%)] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
                 <div className="mx-auto max-w-6xl">
+                    <ConferenceImageCarousel />
                     <section className="mb-6 rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur sm:p-8">
                         <div className="grid gap-5 lg:grid-cols-[1.1fr_1.9fr] lg:items-center">
                             <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
