@@ -28,7 +28,10 @@ export default function Directory() {
         },
         validationSchema: Yup.object().shape({
             pastor_name: Yup.string().required("Pastor name is required"),
-            church_address: Yup.string(),
+            church_address: Yup.string().matches(
+                /^[a-zA-Z0-9\s]*$/,
+                "Church address must not contain special characters",
+            ),
             mobile: Yup.string().required("Mobile number is required"),
             email_address: Yup.string().email("Invalid email"),
             comments: Yup.string(),
