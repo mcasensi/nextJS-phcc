@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 type Delegate = {
     pastor_name: string;
     church_address: string;
-    attendeesNames: string;
+    attendeeNames: string;
 };
 
 export default function Page1() {
@@ -58,7 +58,7 @@ export default function Page1() {
         if (!query) return rows;
 
         return rows.filter((row) =>
-            [row.pastor_name, row.church_address, row.attendeesNames].some(
+            [row.pastor_name, row.church_address, row.attendeeNames].some(
                 (value) =>
                     String(value ?? "")
                         .toLowerCase()
@@ -158,7 +158,7 @@ export default function Page1() {
                                             {row.church_address}
                                         </td>
                                         <td className="border px-3 py-2 align-top">
-                                            {row.attendeesNames}
+                                            {row.attendeeNames}
                                         </td>
                                     </tr>
                                 ))}
