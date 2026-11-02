@@ -228,7 +228,7 @@ const FooterLinkData: FooterLinkType[] = [
         section: "PIONEERING COUNTRIES",
         links: [
             {
-                label: "Vietname",
+                label: "Vietnam",
                 href: "/",
             },
             {

@@ -79,32 +79,34 @@ export default function Conference({
     const fileUrl = encodeURI(conference.file);
 
     return (
-        <section className="container mx-auto mt-25 px-4">
-            <PdfViewer file={fileUrl} />
-            <p className="mt-4 text-center">
-                <a
-                    href={fileUrl}
-                    download={conference.file.split("/").pop()}
-                    className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded bg-blue-600 px-6 py-3 text-white shadow-lg hover:bg-blue-700"
+        <section className="mx-auto mt-20 w-full max-w-5xl px-3 pb-24 sm:mt-25 sm:px-4">
+            <iframe
+                src={fileUrl}
+                title="Conference song sheet PDF"
+                className="h-[calc(100dvh-8rem)] min-h-[24rem] w-full rounded border-0"
+            />
+            <a
+                href={fileUrl}
+                download={conference.file.split("/").pop()}
+                className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-1/2 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center gap-2 whitespace-nowrap rounded bg-blue-600 px-5 py-3 text-white shadow-lg hover:bg-blue-700"
+            >
+                <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="h-5 w-5 shrink-0"
                 >
-                    <svg
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v4h14v-4"
-                        />
-                    </svg>
-                    Download PDF
-                </a>
-            </p>
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v4h14v-4"
+                    />
+                </svg>
+                Download PDF
+            </a>
         </section>
     );
 }
