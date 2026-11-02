@@ -1,5 +1,10 @@
 "use client";
 import React from "react";
+import dynamic from "next/dynamic";
+
+const PdfViewer = dynamic(() => import("@/components/PdfViewer"), {
+    ssr: false,
+});
 
 export default function Conference({
     params,
@@ -54,6 +59,11 @@ export default function Conference({
             btn: "Click here to Download - May 2026 Song Sheet",
             file: "/images/conference/May 2026.pdf",
         },
+        {
+            monthYear: "112026",
+            btn: "Click here to Download - November 2026 Song Sheet",
+            file: "/images/conference/Nov2026.pdf",
+        },
     ];
 
     const conference = conferences.find((c) => c.monthYear === slug);
@@ -66,13 +76,35 @@ export default function Conference({
         );
     }
 
+    const fileUrl = encodeURI(conference.file);
+
     return (
-        <div className="mt-23">
-            <iframe
-                src={conference.file}
-                style={{ width: "100%", height: "80vh" }}
-                title="PDF Viewer"
-            />
-        </div>
+        <section className="container mx-auto mt-25 px-4">
+            <PdfViewer file={fileUrl} />
+            <p className="mt-4 text-center">
+                <a
+                    href={fileUrl}
+                    download={conference.file.split("/").pop()}
+                    className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded bg-blue-600 px-6 py-3 text-white shadow-lg hover:bg-blue-700"
+                >
+                    <svg
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-5 w-5"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v4h14v-4"
+                        />
+                    </svg>
+                    Download PDF
+                </a>
+            </p>
+        </section>
     );
 }

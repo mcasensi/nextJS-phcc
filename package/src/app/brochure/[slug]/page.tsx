@@ -30,6 +30,10 @@ export default async function Brochure({
             file: "/images/brochure/052026.png",
             label: "May 2026",
         },
+        "112026": {
+            file: "/images/brochure/112026.jpg",
+            label: "November 2026",
+        },
     };
 
     const brochure = brochures[slug];
